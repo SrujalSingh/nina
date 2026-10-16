@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F9F7F4"/>
+      <stop offset="100%" stop-color="#EDE9E3"/>
+    </linearGradient>
+    <linearGradient id="fabricShade" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6B7A68"/>
+      <stop offset="50%" stop-color="#4E5A4B"/>
+      <stop offset="100%" stop-color="#6B7A68"/>
+    </linearGradient>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#E3DDD4" stroke-width="0.6"/>
+    </pattern>
+  </defs>
+  
+  <rect width="800" height="1000" fill="url(#bgGrad)"/>
+  <rect width="800" height="1000" fill="url(#grid)" opacity="0.4"/>
+  
+  <!-- Subtle Framing Border -->
+  <rect x="24" y="24" width="752" height="952" fill="none" stroke="#DFD8CE" stroke-width="1"/>
+  
+  <!-- Studio Lighting Shadow -->
+  <ellipse cx="400" cy="820" rx="260" ry="24" fill="#000000" opacity="0.08"/>
+  <ellipse cx="400" cy="818" rx="210" ry="14" fill="#000000" opacity="0.06"/>
+  
+  
+    <!-- Shirt Outline -->
+    <g transform="translate(160, 150)">
+      <!-- Shoulders & Torso -->
+      <path d="M 120,40 L 240,10 L 360,40 L 440,160 L 390,210 L 350,150 L 360,620 L 120,620 L 130,150 L 90,210 L 40,160 Z" fill="url(#fabricShade)" stroke="#2C2825" stroke-width="1.5"/>
+      <!-- Tailoring Seams -->
+      <line x1="240" y1="80" x2="240" y2="620" stroke="#332E2A" stroke-width="1.8" opacity="0.5"/>
+      <line x1="230" y1="80" x2="230" y2="620" stroke="#FFF" stroke-width="0.8" opacity="0.3"/>
+      <!-- Collar -->
+      <path d="M 180,30 L 240,95 L 300,30 L 270,12 L 240,40 L 210,12 Z" fill="#4E5A4B" stroke="#1E1B18" stroke-width="2"/>
+      <path d="M 240,40 L 240,95" stroke="#A89F91" stroke-width="1.5"/>
+      <!-- Mother of Pearl Buttons -->
+      <circle cx="240" cy="140" r="5" fill="#FAF7F2" stroke="#B0A696" stroke-width="1"/>
+      <circle cx="240" cy="210" r="5" fill="#FAF7F2" stroke="#B0A696" stroke-width="1"/>
+      <circle cx="240" cy="280" r="5" fill="#FAF7F2" stroke="#B0A696" stroke-width="1"/>
+      <circle cx="240" cy="350" r="5" fill="#FAF7F2" stroke="#B0A696" stroke-width="1"/>
+      <circle cx="240" cy="420" r="5" fill="#FAF7F2" stroke="#B0A696" stroke-width="1"/>
+      <circle cx="240" cy="490" r="5" fill="#FAF7F2" stroke="#B0A696" stroke-width="1"/>
+      <circle cx="240" cy="560" r="5" fill="#FAF7F2" stroke="#B0A696" stroke-width="1"/>
+      <!-- Breast Pocket -->
+      <path d="M 280,180 L 330,180 L 330,240 L 305,255 L 280,240 Z" fill="none" stroke="#2C2825" stroke-width="1.2" opacity="0.7"/>
+    </g>
+  
+  
+  <!-- Angle Badge -->
+  <rect x="50" y="50" width="130" height="28" rx="14" fill="#1A1A1A"/>
+  <text x="66" y="68" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="600" letter-spacing="2" fill="#EFECE6">FRONT VIEW</text>
+  
+  <!-- Product Label at Bottom -->
+  <g transform="translate(60, 890)">
+    <text x="0" y="0" font-family="'Playfair Display', serif" font-size="22" font-weight="600" fill="#1A1A1A">Artisan Belgian Linen Shirt</text>
+    <text x="0" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" letter-spacing="1.5" fill="#8C7456">Pure Normandy Flax Linen • Breathable Slub Weave</text>
+  </g>
+</svg>

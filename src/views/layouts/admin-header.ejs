@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Admin Dashboard' %> | Nina Weaves</title>
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="icon" type="image/svg+xml" href="/images/logo.svg">
+</head>
+<body>
+
+<div class="admin-wrapper">
+  <!-- Sidebar Navigation -->
+  <aside class="admin-sidebar">
+    <div class="admin-brand">
+      <img src="/images/logo.svg" alt="Nina Weaves">
+      <div class="admin-brand-title">Nina Weaves</div>
+    </div>
+
+    <nav class="admin-nav">
+      <div class="nav-section-title">Overview</div>
+      <a href="/admin/dashboard" class="admin-nav-item <%= currentPath === '/dashboard' || currentPath === '/' ? 'active' : '' %>">
+        <span>📊</span> Dashboard
+      </a>
+
+      <div class="nav-section-title">Catalogue &amp; Stock</div>
+      <a href="/admin/products" class="admin-nav-item <%= currentPath.startsWith('/products') ? 'active' : '' %>">
+        <span>👔</span> Products
+      </a>
+      <a href="/admin/categories" class="admin-nav-item <%= currentPath.startsWith('/categories') ? 'active' : '' %>">
+        <span>📁</span> Categories
+      </a>
+      <a href="/admin/inventory" class="admin-nav-item <%= currentPath === '/inventory' ? 'active' : '' %>">
+        <span>📦</span> Inventory
+      </a>
+      <a href="/admin/stock-history" class="admin-nav-item <%= currentPath === '/stock-history' ? 'active' : '' %>">
+        <span>📜</span> Stock History
+      </a>
+
+      <div class="nav-section-title">Sales &amp; Consultations</div>
+      <a href="/admin/orders" class="admin-nav-item <%= currentPath.startsWith('/orders') ? 'active' : '' %>">
+        <span>💬</span> Orders / Inquiries
+      </a>
+
+      <div class="nav-section-title">Storefront &amp; Settings</div>
+      <a href="/admin/content" class="admin-nav-item <%= currentPath === '/content' ? 'active' : '' %>">
+        <span>🖼️</span> Website Content
+      </a>
+      <a href="/admin/policies" class="admin-nav-item <%= currentPath === '/policies' ? 'active' : '' %>">
+        <span>📋</span> Policies
+      </a>
+      <a href="/admin/settings" class="admin-nav-item <%= currentPath === '/settings' ? 'active' : '' %>">
+        <span>⚙️</span> Store Settings
+      </a>
+      <a href="/admin/account" class="admin-nav-item <%= currentPath === '/account' ? 'active' : '' %>">
+        <span>🔒</span> Admin Account
+      </a>
+    </nav>
+
+    <div class="admin-sidebar-footer">
+      <div class="admin-user-pill">
+        <div class="user-avatar">
+          <%= (admin && admin.name) ? admin.name.charAt(0).toUpperCase() : 'A' %>
+        </div>
+        <div style="line-height: 1.2;">
+          <div style="font-size: 0.82rem; font-weight: 600; color: #FFF;"><%= (admin && admin.name) ? admin.name : 'Administrator' %></div>
+          <div style="font-size: 0.72rem; color: #64748B;"><%= (admin && admin.username) ? admin.username : 'admin' %></div>
+        </div>
+      </div>
+      <a href="/admin/logout" title="Sign Out" style="color: #EF4444; font-size: 1.1rem; padding: 0.4rem;">
+        🚪
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="admin-main">
+    <header class="admin-topbar">
+      <div class="admin-topbar-title">
+        <%= typeof title !== 'undefined' ? title : 'Management Portal' %>
+      </div>
+      <div class="admin-topbar-actions">
+        <a href="/" target="_blank" class="admin-btn admin-btn-secondary admin-btn-sm">
+          👁️ View Live Storefront ↗
+        </a>
+        <a href="/admin/logout" class="admin-btn admin-btn-danger admin-btn-sm">
+          Sign Out
+        </a>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <% if (typeof successMsg !== 'undefined' && successMsg) { %>
+        <div class="alert alert-success">
+          <span>✓ <%= successMsg %></span>
+        </div>
+      <% } %>
+
+      <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
+        <div class="alert alert-error">
+          <span>⚠ <%= errorMsg %></span>
+        </div>
+      <% } %>

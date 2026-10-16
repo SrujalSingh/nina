@@ -1,0 +1,207 @@
+<%- include('../layouts/admin-header') %>
+
+<!-- Summary Cards Grid -->
+<div class="stat-grid">
+  <!-- 1. Active Products -->
+  <div class="stat-card">
+    <div class="stat-icon" style="background:#EFF6FF; color:#3B82F6;">👔</div>
+    <div>
+      <div class="stat-val"><%= stats.activeProducts %></div>
+      <div class="stat-label">Active Products</div>
+    </div>
+  </div>
+
+  <!-- 2. Product Variations -->
+  <div class="stat-card">
+    <div class="stat-icon" style="background:#F3E8FF; color:#9333EA;">🧩</div>
+    <div>
+      <div class="stat-val"><%= stats.totalVariations %></div>
+      <div class="stat-label">Total Variations</div>
+    </div>
+  </div>
+
+  <!-- 3. Total Inventory Units -->
+  <div class="stat-card">
+    <div class="stat-icon" style="background:#ECFDF5; color:#10B981;">📦</div>
+    <div>
+      <div class="stat-val"><%= stats.totalUnits %></div>
+      <div class="stat-label">Units in Stock</div>
+    </div>
+  </div>
+
+  <!-- 4. Low-Stock Products -->
+  <div class="stat-card">
+    <div class="stat-icon" style="background:#FFFBEB; color:#F59E0B;">⚠️</div>
+    <div>
+      <div class="stat-val"><%= stats.lowStockCount %></div>
+      <div class="stat-label">Low-Stock Products</div>
+    </div>
+  </div>
+
+  <!-- 5. Out-of-Stock Variations -->
+  <div class="stat-card">
+    <div class="stat-icon" style="background:#FEF2F2; color:#EF4444;">🚫</div>
+    <div>
+      <div class="stat-val"><%= stats.outOfStockCount %></div>
+      <div class="stat-label">Out-of-Stock Variations</div>
+    </div>
+  </div>
+</div>
+
+<!-- Low Stock Warnings Alert Banner if any -->
+<% if (stats.lowStockAlerts && stats.lowStockAlerts.length > 0) { %>
+  <div class="panel" style="border-left: 4px solid var(--admin-warning);">
+    <div class="panel-header" style="background:#FFFBEB;">
+      <div class="panel-title" style="color:#B45309; display:flex; align-items:center; gap:0.5rem;">
+        <span>⚠️</span> Immediate Attention: Low &amp; Out-of-Stock Alerts
+      </div>
+      <a href="/admin/inventory?filter=low_stock" class="admin-btn admin-btn-sm admin-btn-secondary">View Inventory Filter →</a>
+    </div>
+    <div class="panel-body" style="padding:0;">
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Variation SKU</th>
+              <th>Size / Quality</th>
+              <th>Current Stock</th>
+              <th>Threshold</th>
+              <th>Status</th>
+              <th>Quick Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% stats.lowStockAlerts.forEach(alert => { %>
+              <tr>
+                <td><strong><%= alert.product_name %></strong></td>
+                <td><code style="background:#F1F5F9; padding:2px 6px; border-radius:4px;"><%= alert.sku %></code></td>
+                <td><%= alert.size ? `${alert.size} — ` : '' %><%= alert.quality %></td>
+                <td><strong style="color: <%= alert.stock_quantity === 0 ? '#EF4444' : '#F59E0B' %>; font-size:1.1rem;"><%= alert.stock_quantity %></strong> units</td>
+                <td><%= alert.low_stock_threshold %></td>
+                <td>
+                  <% if (alert.stock_quantity === 0) { %>
+                    <span class="admin-badge badge-out">Sold Out</span>
+                  <% } else { %>
+                    <span class="admin-badge badge-low">Low Stock</span>
+                  <% } %>
+                </td>
+                <td>
+                  <button type="button" class="admin-btn admin-btn-sm admin-btn-primary" 
+                    onclick="openStockModal('<%= alert.variation_id %>', '<%= alert.sku %>', '<%= alert.stock_quantity %>', '<%= alert.product_name %>')">
+                    Adjust / Replenish
+                  </button>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<!-- Two Columns: Recent Orders & Recent Stock Movements -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start;">
+  
+  <!-- Left: Recent WhatsApp Orders / Inquiries -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">Recent WhatsApp Orders &amp; Inquiries</div>
+      <a href="/admin/orders" class="admin-btn admin-btn-sm admin-btn-secondary">All Orders →</a>
+    </div>
+    <div class="panel-body" style="padding:0;">
+      <% if (stats.recentOrders && stats.recentOrders.length > 0) { %>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Reference</th>
+                <th>Customer</th>
+                <th>Subtotal</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% stats.recentOrders.forEach(o => { %>
+                <tr>
+                  <td><code style="font-weight:700;"><%= o.order_reference %></code></td>
+                  <td>
+                    <div><%= o.customer_name %></div>
+                    <small style="color:#64748B;"><%= o.customer_phone %></small>
+                  </td>
+                  <td><strong>₹<%= o.subtotal.toLocaleString('en-IN') %></strong></td>
+                  <td>
+                    <% if (o.status === 'confirmed') { %>
+                      <span class="admin-badge badge-confirmed">Confirmed</span>
+                    <% } else if (o.status === 'fulfilled') { %>
+                      <span class="admin-badge badge-fulfilled">Fulfilled</span>
+                    <% } else if (o.status === 'cancelled') { %>
+                      <span class="admin-badge badge-cancelled">Cancelled</span>
+                    <% } else { %>
+                      <span class="admin-badge badge-inquiry">Inquiry</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <a href="/admin/orders/<%= o.id %>" class="admin-btn admin-btn-sm admin-btn-secondary">Inspect</a>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div style="padding: 2.5rem; text-align: center; color: #64748B;">No recent orders recorded.</div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Right: Recent Stock Movements Audit -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">Recent Stock Movements</div>
+      <a href="/admin/stock-history" class="admin-btn admin-btn-sm admin-btn-secondary">Full Audit Log →</a>
+    </div>
+    <div class="panel-body" style="padding:0;">
+      <% if (stats.recentMovements && stats.recentMovements.length > 0) { %>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Date/Time</th>
+                <th>Product &amp; SKU</th>
+                <th>Movement</th>
+                <th>New Stock</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% stats.recentMovements.forEach(m => { %>
+                <tr>
+                  <td style="font-size:0.75rem; color:#64748B;"><%= m.created_at.slice(0, 16) %></td>
+                  <td>
+                    <div style="font-weight:600;"><%= m.product_name %></div>
+                    <small style="color:#64748B;"><%= m.variation_sku %></small>
+                  </td>
+                  <td>
+                    <span style="font-weight:700; color: <%= m.quantity_change > 0 ? '#10B981' : '#EF4444' %>;">
+                      <%= m.quantity_change > 0 ? `+${m.quantity_change}` : m.quantity_change %>
+                    </span>
+                  </td>
+                  <td><strong><%= m.new_quantity %></strong></td>
+                  <td><small><%= m.reason %></small></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div style="padding: 2.5rem; text-align: center; color: #64748B;">No recent stock movements.</div>
+      <% } %>
+    </div>
+  </div>
+
+</div>
+
+<%- include('../layouts/admin-footer') %>

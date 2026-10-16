@@ -1,0 +1,58 @@
+<%- include('../../layouts/admin-header') %>
+
+<div style="margin-bottom: 1.5rem;">
+  <h1 style="font-size: 1.5rem; font-weight: 700;">Administrator Account &amp; Security</h1>
+  <p style="color: var(--admin-text-muted); font-size: 0.88rem;">Manage your administrator profile credentials and update password.</p>
+</div>
+
+<div class="panel" style="max-width: 650px;">
+  <div class="panel-header">
+    <div class="panel-title">Account Security Details</div>
+  </div>
+  <div class="panel-body">
+    <form action="/admin/account" method="POST">
+      
+      <div class="admin-form-group">
+        <label class="admin-label">Username</label>
+        <input type="text" class="admin-input" value="<%= admin ? admin.username : '' %>" readonly style="background:#F1F5F9; color:#64748B;">
+        <div class="admin-help">Username cannot be changed.</div>
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-label" for="name">Display Name *</label>
+        <input type="text" id="name" name="name" class="admin-input" value="<%= admin ? admin.name : '' %>" required>
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-label" for="email">Email Address *</label>
+        <input type="email" id="email" name="email" class="admin-input" value="<%= admin ? admin.email : '' %>" required>
+      </div>
+
+      <div style="margin-top: 2rem; border-top: 1px solid var(--admin-border); padding-top: 1.5rem;">
+        <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 1rem;">Change Password</h3>
+        <p style="font-size: 0.82rem; color: #64748B; margin-bottom: 1.25rem;">Leave password fields blank if you do not wish to change your current password.</p>
+
+        <div class="admin-form-group">
+          <label class="admin-label" for="current_password">Current Password</label>
+          <input type="password" id="current_password" name="current_password" class="admin-input" placeholder="••••••••••••">
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-label" for="new_password">New Password (Min. 8 characters)</label>
+          <input type="password" id="new_password" name="new_password" class="admin-input" placeholder="••••••••••••">
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-label" for="confirm_password">Confirm New Password</label>
+          <input type="password" id="confirm_password" name="confirm_password" class="admin-input" placeholder="••••••••••••">
+        </div>
+      </div>
+
+      <div style="margin-top: 2rem;">
+        <button type="submit" class="admin-btn admin-btn-primary admin-btn-lg">Update Profile &amp; Security</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../../layouts/admin-footer') %>

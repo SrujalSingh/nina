@@ -1,0 +1,103 @@
+<%- include('../layouts/header') %>
+
+<div class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
+  <!-- Breadcrumb & Header -->
+  <div style="margin-bottom: 2.5rem;">
+    <div style="font-size: 0.82rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;">
+      <a href="/" style="color: var(--text-muted);">Home</a> / 
+      <span><%= selectedCategory ? selectedCategory.name : 'All Products' %></span>
+    </div>
+    <h1 class="heading-lg"><%= selectedCategory ? selectedCategory.name : 'The Complete Collection' %></h1>
+    <% if (selectedCategory && selectedCategory.description) { %>
+      <p style="color: var(--text-muted); max-width: 650px; margin-top: 0.5rem; font-size: 1.05rem;"><%= selectedCategory.description %></p>
+    <% } else { %>
+      <p style="color: var(--text-muted); max-width: 650px; margin-top: 0.5rem; font-size: 1.05rem;">
+        Explore our curated selection of bespoke ready-to-wear shirts and mill-certified fabric swatches.
+      </p>
+    <% } %>
+  </div>
+
+  <!-- Filter & Search Toolbar -->
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.25rem; padding-bottom: 1.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border-subtle);">
+    <!-- Category Tabs -->
+    <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+      <a href="/shop" class="btn btn-sm <%= !currentCategory ? 'btn-primary' : 'btn-outline' %>">All Products</a>
+      <a href="/shop?category=shirts" class="btn btn-sm <%= currentCategory === 'shirts' ? 'btn-primary' : 'btn-outline' %>">Shirts</a>
+      <a href="/shop?category=fabric-samples" class="btn btn-sm <%= currentCategory === 'fabric-samples' ? 'btn-primary' : 'btn-outline' %>">Fabric Samples</a>
+    </div>
+
+    <!-- Search & Sort Forms -->
+    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+      <form action="/shop" method="GET" style="display: flex; gap: 0.5rem;">
+        <% if (currentCategory) { %><input type="hidden" name="category" value="<%= currentCategory %>"><% } %>
+        <input type="text" name="search" value="<%= search %>" placeholder="Search by name or SKU..." class="form-input" style="padding: 0.5rem 0.85rem; width: 220px; font-size: 0.85rem;">
+        <button type="submit" class="btn btn-primary btn-sm">Search</button>
+      </form>
+
+      <form action="/shop" method="GET" id="sort-form">
+        <% if (currentCategory) { %><input type="hidden" name="category" value="<%= currentCategory %>"><% } %>
+        <% if (search) { %><input type="hidden" name="search" value="<%= search %>"><% } %>
+        <select name="sort" onchange="document.getElementById('sort-form').submit();" class="form-select" style="padding: 0.5rem 0.85rem; font-size: 0.85rem; cursor: pointer;">
+          <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Sort by: New Arrivals</option>
+          <option value="price_asc" <%= sort === 'price_asc' ? 'selected' : '' %>>Price: Low to High</option>
+          <option value="price_desc" <%= sort === 'price_desc' ? 'selected' : '' %>>Price: High to Low</option>
+          <option value="name" <%= sort === 'name' ? 'selected' : '' %>>Product Name</option>
+        </select>
+      </form>
+    </div>
+  </div>
+
+  <!-- Product Grid -->
+  <% if (products && products.length > 0) { %>
+    <div class="product-grid">
+      <% products.forEach(product => { %>
+        <div class="product-card">
+          <div class="product-media-wrap">
+            <a href="/product/<%= product.slug %>">
+              <img src="<%= product.primary_image || '/uploads/products/shirt-oxford-1.svg' %>" alt="<%= product.name %>" class="product-card-img" loading="lazy">
+            </a>
+            <div class="product-badge-group">
+              <% if (product.total_stock === 0) { %>
+                <span class="badge badge-sold-out">Sold Out</span>
+              <% } else if (product.total_stock <= product.low_stock_threshold) { %>
+                <span class="badge badge-low-stock">Few Units Left</span>
+              <% } %>
+              <% if (product.sale_price) { %>
+                <span class="badge badge-sale">Sale</span>
+              <% } %>
+            </div>
+          </div>
+          <div class="product-info">
+            <span class="product-category-tag"><%= product.subcategory || product.category_name %></span>
+            <h3 class="product-name">
+              <a href="/product/<%= product.slug %>"><%= product.name %></a>
+            </h3>
+            <span class="product-sku">SKU: <%= product.sku %></span>
+
+            <div class="product-price-row">
+              <span class="price-current">₹<%= (product.sale_price || product.base_price).toLocaleString('en-IN') %></span>
+              <% if (product.sale_price) { %>
+                <span class="price-original">₹<%= product.base_price.toLocaleString('en-IN') %></span>
+              <% } %>
+              <span class="price-unit">/ <%= product.unit || 'piece' %></span>
+            </div>
+
+            <div class="product-card-actions">
+              <a href="/product/<%= product.slug %>" class="btn btn-primary btn-sm btn-block">
+                <%= product.category_slug === 'fabric-samples' ? 'Inspect Swatch' : 'Select Size & Options' %>
+              </a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div style="text-align: center; padding: 5rem 1rem; background-color: #FFF; border: 1px dashed var(--border-strong); border-radius: var(--radius-md);">
+      <h3 class="heading-md" style="margin-bottom: 0.75rem;">No Pieces Matched Your Search</h3>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Try modifying your keyword filter or browse all atelier items.</p>
+      <a href="/shop" class="btn btn-primary">Reset Filter &amp; View All</a>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../layouts/footer') %>

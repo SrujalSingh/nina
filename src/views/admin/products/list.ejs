@@ -1,0 +1,134 @@
+<%- include('../../layouts/admin-header') %>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <h1 style="font-size: 1.5rem; font-weight: 700;">Products Management</h1>
+    <p style="color: var(--admin-text-muted); font-size: 0.88rem;">Manage shirts, fabric samples, multiple images, and product settings.</p>
+  </div>
+  <a href="/admin/products/new" class="admin-btn admin-btn-primary">
+    ➕ Create New Product
+  </a>
+</div>
+
+<!-- Filters & Search Bar -->
+<div class="panel" style="margin-bottom: 1.5rem;">
+  <div class="panel-body" style="padding: 1rem 1.5rem;">
+    <form action="/admin/products" method="GET" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+      <div style="flex-grow: 1; min-width: 240px;">
+        <input type="text" name="search" value="<%= search %>" placeholder="Search by product name or SKU..." class="admin-input">
+      </div>
+
+      <div style="min-width: 180px;">
+        <select name="category" class="admin-select">
+          <option value="">All Categories</option>
+          <% categories.forEach(cat => { %>
+            <option value="<%= cat.slug %>" <%= currentCategory === cat.slug ? 'selected' : '' %>><%= cat.name %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div style="min-width: 140px;">
+        <select name="status" class="admin-select">
+          <option value="">All Statuses</option>
+          <option value="active" <%= currentStatus === 'active' ? 'selected' : '' %>>Active</option>
+          <option value="inactive" <%= currentStatus === 'inactive' ? 'selected' : '' %>>Inactive</option>
+          <option value="sold_out" <%= currentStatus === 'sold_out' ? 'selected' : '' %>>Sold Out</option>
+        </select>
+      </div>
+
+      <button type="submit" class="admin-btn admin-btn-secondary">Filter</button>
+      <a href="/admin/products" class="admin-btn admin-btn-secondary">Reset</a>
+    </form>
+  </div>
+</div>
+
+<!-- Product Table -->
+<div class="panel">
+  <div class="panel-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width: 70px;">Image</th>
+            <th>Product Name &amp; SKU</th>
+            <th>Category</th>
+            <th>Base Price</th>
+            <th>Variations</th>
+            <th>Total Stock</th>
+            <th>Status</th>
+            <th style="text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (products && products.length > 0) { %>
+            <% products.forEach(p => { %>
+              <tr>
+                <td>
+                  <img src="<%= p.primary_image || '/uploads/products/shirt-oxford-1.svg' %>" alt="" style="width: 48px; height: 58px; object-fit: cover; border-radius: 4px; border: 1px solid #E2E8F0; background: #F8FAFC;">
+                </td>
+                <td>
+                  <div style="font-weight: 700; font-size: 0.95rem;">
+                    <a href="/admin/products/edit/<%= p.id %>" style="color: var(--admin-text-main);"><%= p.name %></a>
+                  </div>
+                  <div style="color: var(--admin-text-muted); font-size: 0.78rem;">
+                    SKU: <code style="font-family: monospace;"><%= p.sku %></code>
+                    <% if (p.is_featured) { %> • <span style="color:#C5A880; font-weight:600;">★ Featured</span><% } %>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-weight: 500;"><%= p.category_name %></span>
+                  <% if (p.subcategory) { %><div style="font-size: 0.75rem; color: #64748B;"><%= p.subcategory %></div><% } %>
+                </td>
+                <td>
+                  <strong>₹<%= p.base_price.toLocaleString('en-IN') %></strong>
+                  <% if (p.sale_price) { %>
+                    <div style="font-size: 0.75rem; color: #10B981;">Sale: ₹<%= p.sale_price.toLocaleString('en-IN') %></div>
+                  <% } %>
+                  <div style="font-size: 0.75rem; color: #64748B;">/ <%= p.unit || 'piece' %></div>
+                </td>
+                <td>
+                  <span class="admin-badge badge-inactive"><%= p.variation_count %> variation(s)</span>
+                </td>
+                <td>
+                  <% if (p.total_stock === 0) { %>
+                    <span class="admin-badge badge-out">0 in stock</span>
+                  <% } else if (p.total_stock <= p.low_stock_threshold) { %>
+                    <span class="admin-badge badge-low"><%= p.total_stock %> remaining</span>
+                  <% } else { %>
+                    <strong style="color: #10B981; font-size: 0.95rem;"><%= p.total_stock %></strong> units
+                  <% } %>
+                </td>
+                <td>
+                  <% if (p.status === 'active') { %>
+                    <span class="admin-badge badge-active">Active</span>
+                  <% } else if (p.status === 'sold_out') { %>
+                    <span class="admin-badge badge-out">Sold Out</span>
+                  <% } else { %>
+                    <span class="admin-badge badge-inactive">Inactive</span>
+                  <% } %>
+                </td>
+                <td style="text-align: right;">
+                  <div style="display: inline-flex; gap: 0.4rem;">
+                    <a href="/product/<%= p.slug %>" target="_blank" class="admin-btn admin-btn-sm admin-btn-secondary" title="View on Storefront">👁️</a>
+                    <a href="/admin/products/edit/<%= p.id %>" class="admin-btn admin-btn-sm admin-btn-primary">Edit</a>
+                    <form action="/admin/products/delete/<%= p.id %>" method="POST" onsubmit="return confirm('Archive product <%= p.name %>? Historical order and stock logs will be preserved.');" style="display:inline;">
+                      <button type="submit" class="admin-btn admin-btn-sm admin-btn-danger" title="Archive Product">🗑️</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="8" style="text-align: center; padding: 3rem; color: #64748B;">
+                No products found matching the criteria.
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../../layouts/admin-footer') %>

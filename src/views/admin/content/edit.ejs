@@ -1,0 +1,49 @@
+<%- include('../../layouts/admin-header') %>
+
+<div style="margin-bottom: 1.5rem;">
+  <h1 style="font-size: 1.5rem; font-weight: 700;">Website Content &amp; Hero Banner</h1>
+  <p style="color: var(--admin-text-muted); font-size: 0.88rem;">Manage customer-facing headlines, announcement bar, and collection imagery without writing code.</p>
+</div>
+
+<div class="panel" style="max-width: 800px;">
+  <div class="panel-header">
+    <div class="panel-title">Homepage Visuals &amp; Copy</div>
+  </div>
+  <div class="panel-body">
+    <form action="/admin/content" method="POST" enctype="multipart/form-data">
+      
+      <div class="admin-form-group">
+        <label class="admin-label" for="announcement_text">Announcement Bar Message (Top of site)</label>
+        <input type="text" id="announcement_text" name="announcement_text" class="admin-input" value="<%= (settings && settings.announcement_text) ? settings.announcement_text : '' %>">
+        <div class="admin-help">Displayed across all storefront pages with a direct link to chat with your stylist.</div>
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-label" for="hero_headline">Hero Headline *</label>
+        <input type="text" id="hero_headline" name="hero_headline" class="admin-input" value="<%= (settings && settings.hero_headline) ? settings.hero_headline : 'The Fine Art of Bespoke Tailoring' %>" required>
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-label" for="hero_subheadline">Hero Subtitle Description *</label>
+        <textarea id="hero_subheadline" name="hero_subheadline" rows="3" class="admin-textarea" required><%= (settings && settings.hero_subheadline) ? settings.hero_subheadline : '' %></textarea>
+      </div>
+
+      <div class="admin-form-group" style="margin-top: 1.5rem; border-top: 1px solid var(--admin-border); padding-top: 1.5rem;">
+        <label class="admin-label">Hero Banner Image</label>
+        <% if (settings && settings.hero_image_url) { %>
+          <div style="margin-bottom: 1rem; max-width: 400px; border-radius: 6px; overflow: hidden; border: 1px solid #E2E8F0;">
+            <img src="<%= settings.hero_image_url %>" alt="Current Banner" style="width: 100%; height: auto;">
+          </div>
+        <% } %>
+        <input type="file" name="hero_image" class="admin-input" accept="image/*">
+        <div class="admin-help">Upload a new hero banner image (JPEG, PNG, WebP, SVG). Recommended resolution: 1600x700px.</div>
+      </div>
+
+      <div style="margin-top: 2rem;">
+        <button type="submit" class="admin-btn admin-btn-primary admin-btn-lg">Save Content Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../../layouts/admin-footer') %>

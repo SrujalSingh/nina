@@ -1,0 +1,82 @@
+<%- include('../../layouts/admin-header') %>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <h1 style="font-size: 1.5rem; font-weight: 700;">Stock Movement Audit History</h1>
+    <p style="color: var(--admin-text-muted); font-size: 0.88rem;">Complete transactional history of all stock additions, deductions, physical counts, and confirmed sales.</p>
+  </div>
+  <a href="/admin/inventory" class="admin-btn admin-btn-secondary">
+    ← Back to Inventory List
+  </a>
+</div>
+
+<div class="panel">
+  <div class="panel-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date &amp; Time</th>
+            <th>Product Name</th>
+            <th>Variation &amp; SKU</th>
+            <th>Previous Qty</th>
+            <th>Quantity Change</th>
+            <th>New Qty</th>
+            <th>Reason / Type</th>
+            <th>Administrator / Order</th>
+            <th>Audit Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (movements && movements.length > 0) { %>
+            <% movements.forEach(m => { %>
+              <tr>
+                <td style="font-size: 0.8rem; color: #64748B; white-space: nowrap;">
+                  <%= m.created_at %>
+                </td>
+                <td>
+                  <strong style="color: var(--admin-text-main);"><%= m.product_name %></strong>
+                </td>
+                <td>
+                  <div><code style="font-family: monospace; font-weight:600;"><%= m.variation_sku %></code></div>
+                  <small style="color: #64748B;">
+                    <%= m.size ? `Size ${m.size} • ` : '' %><%= m.quality %>
+                  </small>
+                </td>
+                <td><%= m.previous_quantity %></td>
+                <td>
+                  <strong style="font-size: 1.05rem; color: <%= m.quantity_change > 0 ? '#10B981' : '#EF4444' %>;">
+                    <%= m.quantity_change > 0 ? `+${m.quantity_change}` : m.quantity_change %>
+                  </strong>
+                </td>
+                <td><strong style="font-size: 1.05rem;"><%= m.new_quantity %></strong></td>
+                <td>
+                  <span class="admin-badge <%= m.quantity_change > 0 ? 'badge-active' : 'badge-low' %>">
+                    <%= m.reason %>
+                  </span>
+                </td>
+                <td>
+                  <div><%= m.admin_name || 'System' %></div>
+                  <% if (m.order_reference) { %>
+                    <small style="color: #4F46E5; font-weight: 600;">Ref: <%= m.order_reference %></small>
+                  <% } %>
+                </td>
+                <td>
+                  <small style="color: #475569;"><%= m.notes || '—' %></small>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="9" style="text-align: center; padding: 3rem; color: #64748B;">
+                No stock movements recorded yet.
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../../layouts/admin-footer') %>

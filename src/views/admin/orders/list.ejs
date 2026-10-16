@@ -1,0 +1,108 @@
+<%- include('../../layouts/admin-header') %>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <h1 style="font-size: 1.5rem; font-weight: 700;">Orders &amp; WhatsApp Inquiries</h1>
+    <p style="color: var(--admin-text-muted); font-size: 0.88rem;">Manage customer consultation inquiries, review pieces, confirm sales, and deduct inventory.</p>
+  </div>
+</div>
+
+<!-- Status Tabs & Search -->
+<div class="panel" style="margin-bottom: 1.5rem;">
+  <div class="panel-body" style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <!-- Status Tabs -->
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      <a href="/admin/orders" class="admin-btn admin-btn-sm <%= currentStatus === 'all' ? 'admin-btn-primary' : 'admin-btn-secondary' %>">All Orders</a>
+      <a href="/admin/orders?status=inquiry" class="admin-btn admin-btn-sm <%= currentStatus === 'inquiry' ? 'admin-btn-primary' : 'admin-btn-secondary' %>">Inquiries (Pending Confirmation)</a>
+      <a href="/admin/orders?status=confirmed" class="admin-btn admin-btn-sm <%= currentStatus === 'confirmed' ? 'admin-btn-primary' : 'admin-btn-secondary' %>">Confirmed (Stock Deducted)</a>
+      <a href="/admin/orders?status=fulfilled" class="admin-btn admin-btn-sm <%= currentStatus === 'fulfilled' ? 'admin-btn-primary' : 'admin-btn-secondary' %>">Fulfilled / Dispatched</a>
+      <a href="/admin/orders?status=cancelled" class="admin-btn admin-btn-sm <%= currentStatus === 'cancelled' ? 'admin-btn-primary' : 'admin-btn-secondary' %>">Cancelled</a>
+    </div>
+
+    <!-- Search -->
+    <form action="/admin/orders" method="GET" style="display: flex; gap: 0.5rem;">
+      <input type="text" name="search" value="<%= search %>" placeholder="Search reference or customer..." class="admin-input" style="width: 220px; padding: 0.45rem 0.75rem;">
+      <button type="submit" class="admin-btn admin-btn-secondary admin-btn-sm">Search</button>
+    </form>
+  </div>
+</div>
+
+<!-- Orders Table -->
+<div class="panel">
+  <div class="panel-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Order Ref</th>
+            <th>Date</th>
+            <th>Customer Name &amp; Contact</th>
+            <th>Pieces / Items Requested</th>
+            <th>Subtotal</th>
+            <th>Status</th>
+            <th style="text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (orders && orders.length > 0) { %>
+            <% orders.forEach(order => { %>
+              <tr>
+                <td>
+                  <a href="/admin/orders/<%= order.id %>" style="color: #4F46E5; font-weight: 700; font-family: monospace;">
+                    <%= order.order_reference %>
+                  </a>
+                </td>
+                <td style="font-size: 0.8rem; color: #64748B; white-space: nowrap;">
+                  <%= order.created_at.slice(0, 16) %>
+                </td>
+                <td>
+                  <div style="font-weight: 600;"><%= order.customer_name %></div>
+                  <div style="font-size: 0.78rem; color: #64748B;"><%= order.customer_phone %></div>
+                </td>
+                <td>
+                  <div style="font-size: 0.85rem; max-width: 320px;">
+                    <% if (order.items && order.items.length > 0) { %>
+                      <% order.items.slice(0, 2).forEach(it => { %>
+                        <div>• <%= it.product_name %> (<%= it.quantity %> <%= it.unit %>)</div>
+                      <% }) %>
+                      <% if (order.items.length > 2) { %>
+                        <small style="color: #64748B;">+ <%= order.items.length - 2 %> more item(s)...</small>
+                      <% } %>
+                    <% } %>
+                  </div>
+                </td>
+                <td>
+                  <strong style="font-size: 1.05rem;">₹<%= order.subtotal.toLocaleString('en-IN') %></strong>
+                </td>
+                <td>
+                  <% if (order.status === 'confirmed') { %>
+                    <span class="admin-badge badge-confirmed">Confirmed</span>
+                  <% } else if (order.status === 'fulfilled') { %>
+                    <span class="admin-badge badge-fulfilled">Fulfilled</span>
+                  <% } else if (order.status === 'cancelled') { %>
+                    <span class="admin-badge badge-cancelled">Cancelled</span>
+                  <% } else { %>
+                    <span class="admin-badge badge-inquiry">Inquiry (Pending)</span>
+                  <% } %>
+                </td>
+                <td style="text-align: right;">
+                  <a href="/admin/orders/<%= order.id %>" class="admin-btn admin-btn-sm admin-btn-primary">
+                    Review Order →
+                  </a>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="7" style="text-align: center; padding: 3rem; color: #64748B;">
+                No orders or WhatsApp inquiries found.
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../../layouts/admin-footer') %>

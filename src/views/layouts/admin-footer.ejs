@@ -1,0 +1,56 @@
+    </div><!-- /.admin-content -->
+  </main>
+</div><!-- /.admin-wrapper -->
+
+<!-- Global Stock Adjustment Modal Dialog -->
+<div id="stock-adjust-modal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 style="font-size: 1.1rem; font-weight: 700;">Record Stock Adjustment</h3>
+      <button type="button" onclick="closeStockModal()" style="background:none; border:none; font-size:1.4rem; cursor:pointer; color:#64748B;">&times;</button>
+    </div>
+    
+    <form action="/admin/inventory/adjust" method="POST">
+      <input type="hidden" id="modal-var-id" name="variation_id">
+      
+      <div class="modal-body">
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; padding:0.85rem; margin-bottom:1.25rem; font-size:0.85rem;">
+          <div>Product: <strong id="modal-product-name">—</strong></div>
+          <div style="margin-top:0.25rem;">Variation SKU: <strong id="modal-var-sku" style="font-family:monospace;">—</strong></div>
+          <div style="margin-top:0.25rem;">Current In-Stock: <strong id="modal-current-stock" style="color:#0F172A; font-size:1.05rem;">0</strong> units</div>
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-label" for="adjustment_type">Adjustment Reason / Action *</label>
+          <select id="adjustment_type" name="adjustment_type" class="admin-select" required>
+            <option value="incoming_stock">➕ Receive Incoming Stock (Add units)</option>
+            <option value="physical_count">📋 Physical Count Reconcile (Set exact count)</option>
+            <option value="damaged">⚠️ Damaged / Defective Stock (Remove units)</option>
+            <option value="sold">💼 Offline / Studio Direct Sale (Deduct units)</option>
+            <option value="remove">➖ Manual Correction (Remove units)</option>
+          </select>
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-label" for="modal-qty-input">Quantity (Units) *</label>
+          <input type="number" id="modal-qty-input" name="quantity_value" class="admin-input" min="0" value="1" required>
+          <div class="admin-help">For incoming/damaged/sold, enter the number of units to add or remove. For physical count, enter the new total count.</div>
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-label" for="modal-notes">Audit Log Note / Reference</label>
+          <input type="text" id="modal-notes" name="notes" class="admin-input" placeholder="e.g. Mill delivery PO #489, showroom display sample">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" onclick="closeStockModal()" class="admin-btn admin-btn-secondary">Cancel</button>
+        <button type="submit" class="admin-btn admin-btn-primary">Confirm &amp; Record Stock Movement</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/js/admin.js"></script>
+</body>
+</html>

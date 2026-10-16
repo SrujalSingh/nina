@@ -1,0 +1,38 @@
+<%- include('../layouts/header') %>
+
+<div class="container" style="padding-top: 4rem; padding-bottom: 6rem; max-width: 860px;">
+  <span class="subheading">Atelier Heritage</span>
+  <h1 class="heading-xl" style="margin-top: 0.5rem; margin-bottom: 2rem;">The Story Behind Nina Weaves</h1>
+
+  <div style="font-size: 1.12rem; line-height: 1.85; color: #383430;">
+    <div style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 2.5rem; margin-bottom: 2.5rem; box-shadow: var(--shadow-sm);">
+      <p style="white-space: pre-line; margin-bottom: 1.5rem;">
+        <%= pageContent %>
+      </p>
+    </div>
+
+    <h2 class="heading-md" style="margin-top: 2.5rem; margin-bottom: 1rem;">Our Tailoring Principles</h2>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+      <div style="background: #FFF; padding: 1.5rem; border: 1px solid var(--border-subtle); border-radius: 6px;">
+        <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--accent-gold);">Single-Needle Craft</h3>
+        <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6;">
+          We stitch with 22 stitches per inch using high-tensile threads, resulting in clean, puck-free flat felled seams that contour naturally to the body.
+        </p>
+      </div>
+
+      <div style="background: #FFF; padding: 1.5rem; border: 1px solid var(--border-subtle); border-radius: 6px;">
+        <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--accent-gold);">Rare European Flax</h3>
+        <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6;">
+          Our linen is harvested in Flanders and Normandy, wet-spun for long unbroken filaments that possess natural thermo-regulating properties.
+        </p>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 3.5rem;">
+      <a href="/shop" class="btn btn-primary btn-lg">Explore Our Archive</a>
+    </div>
+  </div>
+</div>
+
+<%- include('../layouts/footer') %>

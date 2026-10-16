@@ -1,0 +1,15 @@
+<%- include('../layouts/header') %>
+
+<div class="container" style="padding: 7rem 1.5rem; text-align: center; max-width: 600px;">
+  <span class="subheading" style="color: var(--color-danger);">Service Notice</span>
+  <h1 class="heading-xl" style="margin-top: 0.5rem; margin-bottom: 1rem;">Temporary Interruption</h1>
+  <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.7; margin-bottom: 2rem;">
+    <%= typeof message !== 'undefined' ? message : 'Our atelier servers are momentarily updating. Please refresh the page or contact our WhatsApp concierge directly.' %>
+  </p>
+  <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+    <a href="/" class="btn btn-primary">Return to Homepage</a>
+    <a href="https://wa.me/<%= (settings && settings.whatsapp_number) ? settings.whatsapp_number : '919876543210' %>" class="btn btn-whatsapp">Contact WhatsApp Concierge</a>
+  </div>
+</div>
+
+<%- include('../layouts/footer') %>

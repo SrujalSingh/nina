@@ -1,0 +1,92 @@
+<%- include('../../layouts/admin-header') %>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <h1 style="font-size: 1.5rem; font-weight: 700;">Categories Management</h1>
+    <p style="color: var(--admin-text-muted); font-size: 0.88rem;">Manage default categories (Shirts, Fabric Samples) and create custom sections.</p>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; align-items: start;">
+  <!-- Categories Table -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">Existing Categories</div>
+    </div>
+    <div class="panel-body" style="padding: 0;">
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Category Name</th>
+              <th>Slug / URL</th>
+              <th>Visibility</th>
+              <th style="text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% categories.forEach(cat => { %>
+              <tr>
+                <td><strong>#<%= cat.display_order %></strong></td>
+                <td>
+                  <div style="font-weight: 700;"><%= cat.name %></div>
+                  <small style="color: #64748B;"><%= cat.description %></small>
+                </td>
+                <td><code>/shop?category=<%= cat.slug %></code></td>
+                <td>
+                  <span class="admin-badge <%= cat.is_active ? 'badge-active' : 'badge-inactive' %>">
+                    <%= cat.is_active ? 'Visible' : 'Hidden' %>
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <form action="/admin/categories/delete/<%= cat.id %>" method="POST" onsubmit="return confirm('Delete category <%= cat.name %>?');" style="display:inline;">
+                    <button type="submit" class="admin-btn admin-btn-sm admin-btn-danger">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create New Category Panel -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">Add New Category</div>
+    </div>
+    <div class="panel-body">
+      <form action="/admin/categories/new" method="POST">
+        <div class="admin-form-group">
+          <label class="admin-label" for="cat_name">Category Name *</label>
+          <input type="text" id="cat_name" name="name" class="admin-input" required placeholder="e.g. Linen Overshirts">
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-label" for="cat_desc">Description</label>
+          <textarea id="cat_desc" name="description" rows="3" class="admin-textarea" placeholder="Brief explanation of the collection..."></textarea>
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-label" for="cat_order">Display Priority Order</label>
+          <input type="number" id="cat_order" name="display_order" class="admin-input" value="3" min="0">
+        </div>
+
+        <div class="admin-form-group">
+          <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; cursor: pointer;">
+            <input type="checkbox" name="is_active" value="1" checked>
+            Active (Visible on Customer Navigation)
+          </label>
+        </div>
+
+        <div style="margin-top: 1.5rem;">
+          <button type="submit" class="admin-btn admin-btn-primary admin-btn-block">Create Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include('../../layouts/admin-footer') %>

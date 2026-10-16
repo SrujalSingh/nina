@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F9F7F4"/>
+      <stop offset="100%" stop-color="#EDE9E3"/>
+    </linearGradient>
+    <linearGradient id="fabricShade" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4D535D"/>
+      <stop offset="50%" stop-color="#343A43"/>
+      <stop offset="100%" stop-color="#4D535D"/>
+    </linearGradient>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#E3DDD4" stroke-width="0.6"/>
+    </pattern>
+  </defs>
+  
+  <rect width="800" height="1000" fill="url(#bgGrad)"/>
+  <rect width="800" height="1000" fill="url(#grid)" opacity="0.4"/>
+  
+  <!-- Subtle Framing Border -->
+  <rect x="24" y="24" width="752" height="952" fill="none" stroke="#DFD8CE" stroke-width="1"/>
+  
+  <!-- Studio Lighting Shadow -->
+  <ellipse cx="400" cy="820" rx="260" ry="24" fill="#000000" opacity="0.08"/>
+  <ellipse cx="400" cy="818" rx="210" ry="14" fill="#000000" opacity="0.06"/>
+  
+  
+    <!-- Fabric Sample Swatches Presentation -->
+    <g transform="translate(180, 160)">
+      <!-- Swatch Folder Backing -->
+      <rect x="0" y="0" width="440" height="600" rx="6" fill="#2B2724" stroke="#4A443E" stroke-width="2"/>
+      
+      <!-- Fabric Swatch 1 Primary -->
+      <rect x="40" y="50" width="360" height="240" rx="4" fill="url(#fabricShade)" stroke="#8C7A68" stroke-width="1.5"/>
+      <!-- Thread Weave Texture Overlay -->
+      <g opacity="0.3" stroke="#FAF8F5" stroke-width="1">
+        <line x1="40" y1="60" x2="400" y2="60" stroke-dasharray="3 3"/><line x1="40" y1="79" x2="400" y2="79" stroke-dasharray="3 3"/><line x1="40" y1="98" x2="400" y2="98" stroke-dasharray="3 3"/><line x1="40" y1="117" x2="400" y2="117" stroke-dasharray="3 3"/><line x1="40" y1="136" x2="400" y2="136" stroke-dasharray="3 3"/><line x1="40" y1="155" x2="400" y2="155" stroke-dasharray="3 3"/><line x1="40" y1="174" x2="400" y2="174" stroke-dasharray="3 3"/><line x1="40" y1="193" x2="400" y2="193" stroke-dasharray="3 3"/><line x1="40" y1="212" x2="400" y2="212" stroke-dasharray="3 3"/><line x1="40" y1="231" x2="400" y2="231" stroke-dasharray="3 3"/><line x1="40" y1="250" x2="400" y2="250" stroke-dasharray="3 3"/><line x1="40" y1="269" x2="400" y2="269" stroke-dasharray="3 3"/>
+      </g>
+      <!-- Pinked Pinking Shears Edge Effect -->
+      <path d="M 40,290 L 400,290" stroke="#1A1816" stroke-width="3" stroke-dasharray="6 4"/>
+      
+      <!-- Swatch Spec Card -->
+      <rect x="40" y="320" width="360" height="230" rx="4" fill="#FAF8F5" stroke="#E3DDD4" stroke-width="1"/>
+      <text x="60" y="360" font-family="'Playfair Display', serif" font-size="18" font-weight="600" fill="#1A1A1A">AUTHENTIC MILL SPECIFICATION</text>
+      <line x1="60" y1="375" x2="380" y2="375" stroke="#C5A880" stroke-width="1"/>
+      
+      <text x="60" y="410" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="600" fill="#6B6258">COMPOSITION:</text>
+      <text x="180" y="410" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#1A1A1A">High Density Weave Detail</text>
+      
+      <text x="60" y="440" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="600" fill="#6B6258">WEAVE &amp; COUNT:</text>
+      <text x="180" y="440" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#1A1A1A">Crease-Resistant 240 GSM</text>
+      
+      <text x="60" y="470" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="600" fill="#6B6258">TEST CERTIFICATE:</text>
+      <text x="180" y="470" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#2E7D32">OEKO-TEX® Grade A</text>
+      
+      <rect x="60" y="500" width="120" height="24" rx="3" fill="#EFECE6"/>
+      <text x="75" y="516" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="600" letter-spacing="1" fill="#756755">SWATCH CERTIFIED</text>
+    </g>
+  
+  
+  <!-- Angle Badge -->
+  <rect x="50" y="50" width="130" height="28" rx="14" fill="#1A1A1A"/>
+  <text x="66" y="68" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="600" letter-spacing="2" fill="#EFECE6">CLOSE DETAIL</text>
+  
+  <!-- Product Label at Bottom -->
+  <g transform="translate(60, 890)">
+    <text x="0" y="0" font-family="'Playfair Display', serif" font-size="22" font-weight="600" fill="#1A1A1A">Royal Herringbone Fabric Cut</text>
+    <text x="0" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" letter-spacing="1.5" fill="#8C7456">High Density Weave Detail • Crease-Resistant 240 GSM</text>
+  </g>
+</svg>

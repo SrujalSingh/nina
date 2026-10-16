@@ -1,0 +1,42 @@
+<%- include('../../layouts/admin-header') %>
+
+<div style="margin-bottom: 1.5rem;">
+  <h1 style="font-size: 1.5rem; font-weight: 700;">Website Policies &amp; Brand Content</h1>
+  <p style="color: var(--admin-text-muted); font-size: 0.88rem;">Edit shipping terms, return &amp; exchange policies, privacy terms, and the About Us brand story.</p>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 2rem; max-width: 900px;">
+  <% policies.forEach(p => { %>
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title"><%= p.title %></div>
+          <small style="color: #64748B;">Live Storefront URL: <code>/<%= p.slug === 'about-us' ? 'about' : p.slug %></code></small>
+        </div>
+        <a href="/<%= p.slug === 'about-us' ? 'about' : p.slug %>" target="_blank" class="admin-btn admin-btn-sm admin-btn-secondary">
+          View Live Page ↗
+        </a>
+      </div>
+      <div class="panel-body">
+        <form action="/admin/policies/<%= p.slug %>" method="POST">
+          <div class="admin-form-group">
+            <label class="admin-label">Page Headline / Title</label>
+            <input type="text" name="title" class="admin-input" value="<%= p.title %>" required>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-label">Document Content (Plain text / Line breaks preserved)</label>
+            <textarea name="content" rows="8" class="admin-textarea" required><%= p.content %></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+            <span style="font-size: 0.78rem; color: #64748B;">Last Modified: <%= p.updated_at %></span>
+            <button type="submit" class="admin-btn admin-btn-primary">Update <%= p.title %></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<%- include('../../layouts/admin-footer') %>

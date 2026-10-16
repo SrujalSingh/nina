@@ -1,0 +1,243 @@
+<%- include('../layouts/header') %>
+
+<!-- Hero Banner Section -->
+<section class="hero-section">
+  <div class="container hero-container">
+    <div class="hero-content">
+      <span class="hero-badge">Atelier &amp; Bespoke Tailoring</span>
+      <h1 class="hero-title">
+        <%= (settings && settings.hero_headline) ? settings.hero_headline : 'The Fine Art of Bespoke Tailoring' %>
+      </h1>
+      <p class="hero-description">
+        <%= (settings && settings.hero_subheadline) ? settings.hero_subheadline : 'Mastercrafted shirts and museum-grade textile swatches, ordered directly through personal WhatsApp consultation.' %>
+      </p>
+      <div class="hero-cta-group">
+        <a href="/shop?category=shirts" class="btn btn-gold btn-lg">Explore Shirts Collection</a>
+        <a href="/shop?category=fabric-samples" class="btn btn-outline btn-lg hero-btn-outline">Order Fabric Samples</a>
+      </div>
+    </div>
+    
+    <div class="hero-showcase">
+      <div class="hero-showcase-frame">
+        <span class="hero-showcase-badge">Atelier Benchmark</span>
+        <img src="/uploads/products/shirt-oxford-1.svg" alt="Nina Weaves Bespoke Tailoring" class="hero-showcase-img">
+        <div class="hero-showcase-meta">
+          <div class="hero-showcase-title">Heritage Royal Oxford</div>
+          <div class="hero-showcase-sub">Pure Egyptian Giza Cotton • Handcrafted</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Category Spotlights -->
+<section class="section-padding">
+  <div class="container">
+    <div class="section-header">
+      <span class="subheading">Curated Disciplines</span>
+      <h2 class="heading-lg" style="margin-top: 0.5rem;">Explore Our Core Categories</h2>
+      <p>Discover pristine ready-to-wear shirts or order certified fabric swatches to experience the texture before commissioning.</p>
+    </div>
+
+    <div class="category-spotlight-grid">
+      <!-- Category 1: Shirts -->
+      <a href="/shop?category=shirts" class="category-card">
+        <img src="/uploads/products/shirt-oxford-1.svg" alt="Bespoke Shirts" class="category-card-bg">
+        <div class="category-card-overlay"></div>
+        <div class="category-card-content">
+          <span class="subheading" style="color: #E2D1BF;">Category 01</span>
+          <h3 class="category-card-title">Handcrafted Shirts</h3>
+          <p class="category-card-desc">Single-needle tailored garments crafted from Egyptian Giza cottons and European flax linens in sizes XS to XXL and custom dimensions.</p>
+          <span class="btn btn-outline btn-sm" style="color:#FFF; border-color:#FFF; width:fit-content;">Browse Shirts Collection →</span>
+        </div>
+      </a>
+
+      <!-- Category 2: Fabric Samples -->
+      <a href="/shop?category=fabric-samples" class="category-card">
+        <img src="/uploads/products/sample-giza-1.svg" alt="Fabric Samples" class="category-card-bg">
+        <div class="category-card-overlay"></div>
+        <div class="category-card-content">
+          <span class="subheading" style="color: #E2D1BF;">Category 02</span>
+          <h3 class="category-card-title">Fabric Samples &amp; Swatches</h3>
+          <p class="category-card-desc">Mill-certified swatches, trial cuts, and per-metre textiles. Test weave density, yarn count, and natural drape first-hand.</p>
+          <span class="btn btn-outline btn-sm" style="color:#FFF; border-color:#FFF; width:fit-content;">Order Fabric Samples →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Shirts Section -->
+<section class="section-padding" style="background-color: #F8F5F0; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+  <div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <span class="subheading">Master Tailoring</span>
+        <h2 class="heading-lg" style="margin-top: 0.35rem;">Signature Shirts</h2>
+      </div>
+      <a href="/shop?category=shirts" class="btn btn-outline btn-sm">View All Shirts →</a>
+    </div>
+
+    <div class="product-grid">
+      <% if (featuredShirts && featuredShirts.length > 0) { %>
+        <% featuredShirts.forEach(product => { %>
+          <div class="product-card">
+            <div class="product-media-wrap">
+              <a href="/product/<%= product.slug %>">
+                <img src="<%= product.primary_image || '/uploads/products/shirt-oxford-1.svg' %>" alt="<%= product.name %>" class="product-card-img" loading="lazy">
+              </a>
+              <div class="product-badge-group">
+                <% if (product.total_stock === 0) { %>
+                  <span class="badge badge-sold-out">Sold Out</span>
+                <% } else if (product.total_stock <= product.low_stock_threshold) { %>
+                  <span class="badge badge-low-stock">Few Units Left</span>
+                <% } %>
+                <% if (product.sale_price) { %>
+                  <span class="badge badge-sale">Special Price</span>
+                <% } %>
+              </div>
+            </div>
+            <div class="product-info">
+              <span class="product-category-tag"><%= product.subcategory || product.category_name %></span>
+              <h3 class="product-name">
+                <a href="/product/<%= product.slug %>"><%= product.name %></a>
+              </h3>
+              <span class="product-sku">SKU: <%= product.sku %></span>
+
+              <div class="product-price-row">
+                <span class="price-current">₹<%= (product.sale_price || product.base_price).toLocaleString('en-IN') %></span>
+                <% if (product.sale_price) { %>
+                  <span class="price-original">₹<%= product.base_price.toLocaleString('en-IN') %></span>
+                <% } %>
+                <span class="price-unit">/ <%= product.unit || 'piece' %></span>
+              </div>
+
+              <div class="product-card-actions">
+                <a href="/product/<%= product.slug %>" class="btn btn-primary btn-sm btn-block">View Details &amp; Sizes</a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Fabric Samples Section -->
+<section class="section-padding">
+  <div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <span class="subheading">Mill Archive</span>
+        <h2 class="heading-lg" style="margin-top: 0.35rem;">Textile Swatches &amp; Cuts</h2>
+      </div>
+      <a href="/shop?category=fabric-samples" class="btn btn-outline btn-sm">View All Swatches →</a>
+    </div>
+
+    <div class="product-grid">
+      <% if (featuredSamples && featuredSamples.length > 0) { %>
+        <% featuredSamples.forEach(product => { %>
+          <div class="product-card">
+            <div class="product-media-wrap">
+              <a href="/product/<%= product.slug %>">
+                <img src="<%= product.primary_image || '/uploads/products/sample-giza-1.svg' %>" alt="<%= product.name %>" class="product-card-img" loading="lazy">
+              </a>
+              <div class="product-badge-group">
+                <% if (product.total_stock === 0) { %>
+                  <span class="badge badge-sold-out">Sold Out</span>
+                <% } %>
+              </div>
+            </div>
+            <div class="product-info">
+              <span class="product-category-tag"><%= product.subcategory || 'Textile Swatch' %></span>
+              <h3 class="product-name">
+                <a href="/product/<%= product.slug %>"><%= product.name %></a>
+              </h3>
+              <span class="product-sku">SKU: <%= product.sku %></span>
+
+              <div class="product-price-row">
+                <span class="price-current">₹<%= (product.sale_price || product.base_price).toLocaleString('en-IN') %></span>
+                <span class="price-unit">/ <%= product.unit || 'per sample' %></span>
+              </div>
+
+              <div class="product-card-actions">
+                <a href="/product/<%= product.slug %>" class="btn btn-primary btn-sm btn-block">Inspect Swatch &amp; Options</a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<!-- Brand Introduction & Craftsmanship -->
+<section class="section-padding brand-intro-section">
+  <div class="container">
+    <div class="brand-intro-grid">
+      <div>
+        <span class="subheading">The Nina Weaves Standard</span>
+        <h2 class="heading-lg" style="margin-top: 0.5rem; margin-bottom: 1.25rem;">
+          An Unhurried Approach to Wardrobe Architecture
+        </h2>
+        <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; margin-bottom: 1.25rem;">
+          Every shirt created in our atelier begins long before scissors touch fabric. We collaborate with generational European and Egyptian mills to cultivate textiles that possess natural breathability, distinct hand-feel, and longevity.
+        </p>
+        <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.7;">
+          Rather than depersonalized checkout funnels, we consult directly with you on WhatsApp to ensure your sleeve lengths, collar spread, and fabric weights align precisely with your lifestyle.
+        </p>
+
+        <div style="margin-top: 2rem;">
+          <a href="/about" class="btn btn-outline">Read Our Full Atelier Story →</a>
+        </div>
+      </div>
+
+      <div class="brand-feature-list">
+        <div class="feature-item">
+          <div class="feature-icon">✨</div>
+          <h4 class="feature-title">Pure Certified Fibres</h4>
+          <p class="feature-desc">100s two-ply Egyptian Giza cottons and Normandy flax linen with zero synthetic blending.</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">✂️</div>
+          <h4 class="feature-title">Bespoke &amp; Standard Sizing</h4>
+          <p class="feature-desc">Sizes XS to XXL plus individual custom measurements cut by master pattern makers.</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">📱</div>
+          <h4 class="feature-title">WhatsApp Consultation</h4>
+          <p class="feature-desc">Direct concierge service to answer fabric questions and review styling details before crafting.</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">📦</div>
+          <h4 class="feature-title">Insured Express Courier</h4>
+          <p class="feature-desc">Complimentary shipping across India on orders over ₹2,500 with real-time tracking.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Direct WhatsApp Consultation CTA -->
+<section class="section-padding" style="text-align: center; background-color: #1E1B18; color: #FAF8F5;">
+  <div class="container" style="max-width: 780px;">
+    <span class="subheading" style="color: #C5A880;">Personal Atelier Concierge</span>
+    <h2 class="heading-lg" style="margin-top: 0.75rem; margin-bottom: 1.25rem; color: #FFF;">
+      Need Guidance on Weave, Sizing, or Swatches?
+    </h2>
+    <p style="color: #D1C9BE; font-size: 1.1rem; line-height: 1.7; margin-bottom: 2rem;">
+      Speak directly with our head tailor. Send us your measurements or ask for fabric recommendations for your upcoming occasions.
+    </p>
+    <a href="https://wa.me/<%= (settings && settings.whatsapp_number) ? settings.whatsapp_number : '919876543210' %>?text=Hello%20Atelier%20Nina%20Weaves,%20I%20would%20like%20a%20personal%20styling%20and%20sizing%20consultation." target="_blank" class="btn btn-whatsapp btn-lg">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/>
+      </svg>
+      Start WhatsApp Consultation
+    </a>
+  </div>
+</section>
+
+<%- include('../layouts/footer') %>
