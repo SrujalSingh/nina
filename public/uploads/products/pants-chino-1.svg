@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F9F7F4"/>
+      <stop offset="100%" stop-color="#EDE9E3"/>
+    </linearGradient>
+    <linearGradient id="pantsShade" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4C5A9"/>
+      <stop offset="50%" stop-color="#B8A686"/>
+      <stop offset="100%" stop-color="#D4C5A9"/>
+    </linearGradient>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#E3DDD4" stroke-width="0.6"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bgGrad)"/>
+  <rect width="800" height="1000" fill="url(#grid)" opacity="0.4"/>
+  <rect x="24" y="24" width="752" height="952" fill="none" stroke="#DFD8CE" stroke-width="1"/>
+  <ellipse cx="400" cy="880" rx="220" ry="20" fill="#000000" opacity="0.08"/>
+
+  <!-- Atelier Pants Silhouette -->
+  <g transform="translate(230, 120)">
+    <!-- Waistband -->
+    <path d="M 50,40 L 290,40 L 285,90 L 55,90 Z" fill="url(#pantsShade)" stroke="#221F1C" stroke-width="2"/>
+    <!-- Belt Loops -->
+    <rect x="80" y="36" width="10" height="58" rx="2" fill="#221F1C" opacity="0.6"/>
+    <rect x="165" y="36" width="10" height="58" rx="2" fill="#221F1C" opacity="0.6"/>
+    <rect x="250" y="36" width="10" height="58" rx="2" fill="#221F1C" opacity="0.6"/>
+    <!-- Center Button & Fly -->
+    <circle cx="170" cy="65" r="7" fill="#C5A880" stroke="#221F1C" stroke-width="1.5"/>
+    <path d="M 170,90 L 170,260" stroke="#221F1C" stroke-width="2"/>
+    <!-- Left Leg -->
+    <path d="M 55,90 L 40,700 L 140,700 L 165,270 Z" fill="url(#pantsShade)" stroke="#221F1C" stroke-width="2"/>
+    <!-- Right Leg -->
+    <path d="M 285,90 L 300,700 L 200,700 L 175,270 Z" fill="url(#pantsShade)" stroke="#221F1C" stroke-width="2"/>
+    <!-- Crotch curve -->
+    <path d="M 165,270 Q 170,285 175,270" stroke="#221F1C" stroke-width="2" fill="none"/>
+    <!-- Creases / Pleats -->
+    <line x1="90" y1="90" x2="85" y2="700" stroke="#FAF8F5" stroke-width="1.2" opacity="0.4"/>
+    <line x1="250" y1="90" x2="255" y2="700" stroke="#FAF8F5" stroke-width="1.2" opacity="0.4"/>
+    <!-- Turn-up Hem Cuff -->
+    <rect x="38" y="670" width="104" height="30" fill="url(#pantsShade)" stroke="#221F1C" stroke-width="1.5"/>
+    <rect x="198" y="670" width="104" height="30" fill="url(#pantsShade)" stroke="#221F1C" stroke-width="1.5"/>
+  </g>
+
+  <!-- Editorial Card -->
+  <g transform="translate(180, 850)">
+    <rect x="0" y="0" width="440" height="70" rx="6" fill="#1C1917" stroke="#3D3731" stroke-width="1"/>
+    <text x="20" y="32" font-family="'Cormorant Garamond', Georgia, serif" font-size="20" font-weight="600" fill="#FAF8F5">Belgian Linen Chinos</text>
+    <text x="20" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="500" letter-spacing="2" fill="#A99585">Pure Normandy Flax Linen</text>
+  </g>
+</svg>

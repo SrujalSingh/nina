@@ -1,22 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" width="1600" height="700">
   <defs>
     <linearGradient id="heroBg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1A1816"/>
-      <stop offset="50%" stop-color="#24201D"/>
-      <stop offset="100%" stop-color="#141312"/>
+      <stop offset="0%" stop-color="#040707"/>
+      <stop offset="50%" stop-color="#0F1212"/>
+      <stop offset="100%" stop-color="#040707"/>
     </linearGradient>
     <linearGradient id="goldAccent" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#D4C3B3"/>
-      <stop offset="50%" stop-color="#F2EBE4"/>
-      <stop offset="100%" stop-color="#A3886A"/>
+      <stop offset="0%" stop-color="#A99585"/>
+      <stop offset="50%" stop-color="#D9CFC4"/>
+      <stop offset="100%" stop-color="#8F7B6B"/>
     </linearGradient>
     <pattern id="linenTexture" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 0,20 L 40,20 M 20,0 L 20,40" stroke="#332D28" stroke-width="0.8" opacity="0.35"/>
-      <path d="M 0,0 L 40,40 M 40,0 L 0,40" stroke="#332D28" stroke-width="0.4" opacity="0.2"/>
+      <path d="M 0,20 L 40,20 M 20,0 L 20,40" stroke="#1A1E1E" stroke-width="0.8" opacity="0.35"/>
+      <path d="M 0,0 L 40,40 M 40,0 L 0,40" stroke="#1A1E1E" stroke-width="0.4" opacity="0.2"/>
     </pattern>
     <radialGradient id="ambientGlow" cx="70%" cy="50%" r="60%">
-      <stop offset="0%" stop-color="#C5A880" stop-opacity="0.12"/>
-      <stop offset="100%" stop-color="#141312" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#A99585" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#040707" stop-opacity="0"/>
     </radialGradient>
   </defs>
   
@@ -26,8 +26,8 @@
   
   <!-- Subtle Tailoring Silhouette Curves (pure background art, no text) -->
   <g opacity="0.4" transform="translate(700, 0)">
-    <path d="M 200,0 Q 350,200 300,450 T 550,700" fill="none" stroke="#C5A880" stroke-width="1.2"/>
+    <path d="M 200,0 Q 350,200 300,450 T 550,700" fill="none" stroke="#A99585" stroke-width="1.2"/>
     <path d="M 260,0 Q 420,250 370,500 T 620,700" fill="none" stroke="#EFECE6" stroke-width="0.8" opacity="0.5"/>
-    <path d="M 320,0 Q 480,300 440,550 T 680,700" fill="none" stroke="#A3886A" stroke-width="1" opacity="0.3"/>
+    <path d="M 320,0 Q 480,300 440,550 T 680,700" fill="none" stroke="#8F7B6B" stroke-width="1" opacity="0.3"/>
   </g>
 </svg>

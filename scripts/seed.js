@@ -137,7 +137,23 @@ Welcome to Nina Weaves. By browsing our catalogue or initiating orders through o
         2,
         1
       );
-      console.log('[Categories] Seeded default categories: Shirts and Fabric Samples.');
+      catStmt.run(
+        'Pants',
+        'pants',
+        'Precision-tailored trousers and structured chinos crafted from fine wools and Belgian linen.',
+        '/uploads/products/pants-wool-1.svg',
+        3,
+        1
+      );
+      catStmt.run(
+        'Jeans',
+        'jeans',
+        'Artisanal selvedge denim and premium washed jeans engineered with timeless sartorial cuts.',
+        '/uploads/products/jeans-selvedge-1.svg',
+        4,
+        1
+      );
+      console.log('[Categories] Seeded default categories: Shirts, Fabric Samples, Pants, Jeans.');
     }
 
     // Retrieve category IDs

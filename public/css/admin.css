@@ -2,25 +2,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 :root {
-  --admin-sidebar-bg: #1A1D20;
-  --admin-sidebar-hover: #262B30;
-  --admin-sidebar-active: #323840;
-  --admin-sidebar-text: #B4B9C2;
-  --admin-sidebar-text-active: #FFFFFF;
+  --admin-sidebar-bg: #040707;
+  --admin-sidebar-hover: #121616;
+  --admin-sidebar-active: #1D2222;
+  --admin-sidebar-text: #B2AAA0;
+  --admin-sidebar-text-active: #FAF8F5;
   
-  --admin-bg: #F4F6F9;
+  --admin-bg: #F5F2EB;
   --admin-card-bg: #FFFFFF;
-  --admin-border: #E2E8F0;
-  --admin-border-focus: #4F46E5;
+  --admin-border: #E5DFD5;
+  --admin-border-focus: #A99585;
   
-  --admin-text-main: #0F172A;
-  --admin-text-muted: #64748B;
-  --admin-text-light: #94A3B8;
+  --admin-text-main: #141312;
+  --admin-text-muted: #665F57;
+  --admin-text-light: #948B80;
   
-  --admin-primary: #1E293B;
-  --admin-primary-hover: #0F172A;
-  --admin-accent: #C5A880;
-  --admin-accent-dark: #9E7D47;
+  --admin-primary: #0A0A0A;
+  --admin-primary-hover: #22201D;
+  --admin-accent: #A99585;
+  --admin-accent-dark: #8F7B6B;
   
   --admin-success: #10B981;
   --admin-success-light: #ECFDF5;
@@ -84,8 +84,9 @@ a {
 }
 
 .admin-brand img {
-  height: 32px;
-  filter: brightness(0) invert(1);
+  height: 44px;
+  width: auto;
+  mix-blend-mode: screen;
 }
 
 .admin-brand-title {
@@ -383,8 +384,8 @@ a {
 
 .admin-input:focus, .admin-select:focus, .admin-textarea:focus {
   outline: none;
-  border-color: #6366F1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  border-color: var(--admin-accent);
+  box-shadow: 0 0 0 3px rgba(169, 149, 133, 0.2);
 }
 
 .admin-help {

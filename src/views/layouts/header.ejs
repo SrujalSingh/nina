@@ -12,7 +12,7 @@
   <link rel="canonical" href="https://nestbeans.com<%= typeof currentPath !== 'undefined' ? currentPath : '' %>">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="/images/logo.svg">
+  <link rel="icon" type="image/png" href="/images/logo.png">
   
   <!-- Styles -->
   <link rel="stylesheet" href="/css/storefront.css">
@@ -33,17 +33,47 @@
   <header class="site-header">
     <div class="container header-inner">
       <!-- Logo -->
-      <a href="/" class="header-brand">
-        <img src="/images/logo.svg" alt="Nina Weaves Logo">
+      <a href="/" class="header-brand" aria-label="Nina Weaves Atelier Home">
+        <img src="/images/logo.png" alt="Nina Weaves Logo" class="brand-logo-img">
       </a>
 
       <!-- Primary Navigation -->
       <nav>
         <ul class="nav-links">
           <li><a href="/" class="nav-link <%= currentPath === '/' ? 'active' : '' %>">Home</a></li>
-          <li><a href="/shop" class="nav-link <%= currentPath === '/shop' && (!currentPath.includes('shirts') && !currentPath.includes('fabric')) ? 'active' : '' %>">Shop All</a></li>
-          <li><a href="/shop?category=shirts" class="nav-link <%= currentPath.includes('shirts') ? 'active' : '' %>">Shirts</a></li>
-          <li><a href="/shop?category=fabric-samples" class="nav-link <%= currentPath.includes('fabric-samples') ? 'active' : '' %>">Fabric Samples</a></li>
+          
+          <!-- Shop All Dropdown (Shirts, Pants, Jeans) -->
+          <li class="nav-item-dropdown">
+            <a href="/shop" class="nav-link dropdown-toggle <%= (currentPath === '/shop' || currentPath.includes('shirts') || currentPath.includes('pants') || currentPath.includes('jeans')) && !currentPath.includes('fabric') ? 'active' : '' %>">
+              Shop All
+              <svg class="dropdown-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 1L5 5L9 1"/>
+              </svg>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/shop" class="dropdown-link">All Products</a></li>
+              <li><a href="/shop?category=shirts" class="dropdown-link">Shirts</a></li>
+              <li><a href="/shop?category=pants" class="dropdown-link">Pants</a></li>
+              <li><a href="/shop?category=jeans" class="dropdown-link">Jeans</a></li>
+            </ul>
+          </li>
+
+          <!-- Fabric Samples Dropdown (Shirting Fabric, Suiting Fabric, Denim/Jeans Fabric) -->
+          <li class="nav-item-dropdown">
+            <a href="/shop?category=fabric-samples" class="nav-link dropdown-toggle <%= currentPath.includes('fabric-samples') ? 'active' : '' %>">
+              Fabric Samples
+              <svg class="dropdown-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 1L5 5L9 1"/>
+              </svg>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/shop?category=fabric-samples" class="dropdown-link">All Fabric Samples</a></li>
+              <li><a href="/shop?category=fabric-samples&subcategory=Shirting+Fabric" class="dropdown-link">Shirting Fabric</a></li>
+              <li><a href="/shop?category=fabric-samples&subcategory=Suiting+Fabric" class="dropdown-link">Suiting Fabric</a></li>
+              <li><a href="/shop?category=fabric-samples&subcategory=Denim%2FJeans+Fabric" class="dropdown-link">Denim/Jeans Fabric</a></li>
+            </ul>
+          </li>
+
           <li><a href="/about" class="nav-link <%= currentPath === '/about' ? 'active' : '' %>">About Atelier</a></li>
           <li><a href="/contact" class="nav-link <%= currentPath === '/contact' ? 'active' : '' %>">Contact</a></li>
         </ul>

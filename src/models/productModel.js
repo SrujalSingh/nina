@@ -30,8 +30,8 @@ const productModel = {
     }
 
     if (subcategory) {
-      whereClauses.push('p.subcategory = ?');
-      params.push(subcategory);
+      whereClauses.push('(LOWER(p.subcategory) = LOWER(?) OR p.subcategory LIKE ?)');
+      params.push(subcategory.trim(), `%${subcategory.trim()}%`);
     }
 
     if (isFeatured !== null) {

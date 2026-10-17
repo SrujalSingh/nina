@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= typeof title !== 'undefined' ? title : 'Admin Sign In | Nina Weaves Portal' %></title>
   <link rel="stylesheet" href="/css/admin.css">
-  <link rel="icon" type="image/svg+xml" href="/images/logo.svg">
+  <link rel="icon" type="image/png" href="/images/logo.png">
 </head>
-<body style="background-color: #0F172A; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1.5rem;">
+<body style="background-color: #040707; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1.5rem; font-family: 'Plus Jakarta Sans', sans-serif;">
 
-  <div style="width: 100%; max-width: 420px; background-color: #FFF; border-radius: 12px; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+  <div style="width: 100%; max-width: 440px; background-color: #040707; border: 1px solid rgba(169, 149, 133, 0.25); border-radius: 12px; padding: 2.75rem 2.25rem; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);">
     <div style="text-align: center; margin-bottom: 2rem;">
-      <img src="/images/logo.svg" alt="Nina Weaves" style="height: 42px; margin: 0 auto 1rem auto;">
-      <h1 style="font-size: 1.35rem; font-weight: 700; color: #0F172A;">Store Management Portal</h1>
-      <p style="font-size: 0.85rem; color: #64748B; margin-top: 0.25rem;">Sign in with your administrative credentials</p>
+      <img src="/images/logo.png" alt="Nina Weaves" style="height: 54px; margin: 0 auto 1.25rem auto; mix-blend-mode: screen;">
+      <h1 style="font-size: 1.3rem; font-weight: 700; color: #FAF8F5; letter-spacing: 0.05em;">Store Management Portal</h1>
+      <p style="font-size: 0.85rem; color: #A39B91; margin-top: 0.35rem;">Enter administrative credentials to access atelier console</p>
     </div>
 
     <% if (typeof error !== 'undefined' && error) { %>
@@ -24,24 +24,24 @@
 
     <form action="/admin/login" method="POST">
       <div class="admin-form-group">
-        <label class="admin-label" for="username">Username</label>
-        <input type="text" id="username" name="username" class="admin-input" value="<%= typeof username !== 'undefined' ? username : '' %>" required autofocus placeholder="Admin username">
+        <label class="admin-label" for="username" style="color: #D6CEC5;">Username</label>
+        <input type="text" id="username" name="username" class="admin-input" value="<%= typeof username !== 'undefined' ? username : '' %>" required autofocus placeholder="Admin username" style="background:#1B1917; border-color:#38322D; color:#FAF8F5;">
       </div>
 
       <div class="admin-form-group">
-        <label class="admin-label" for="password">Password</label>
-        <input type="password" id="password" name="password" class="admin-input" required placeholder="••••••••••••">
+        <label class="admin-label" for="password" style="color: #D6CEC5;">Password</label>
+        <input type="password" id="password" name="password" class="admin-input" required placeholder="••••••••••••" style="background:#1B1917; border-color:#38322D; color:#FAF8F5;">
       </div>
 
       <div style="margin-top: 2rem;">
-        <button type="submit" class="admin-btn admin-btn-primary" style="width: 100%; padding: 0.8rem; font-size: 0.95rem;">
-          Sign In to Portal
+        <button type="submit" class="admin-btn" style="width: 100%; padding: 0.85rem; font-size: 0.92rem; font-weight: 700; background-color: #A99585; color: #0A0A0A; border-radius: 6px; cursor: pointer; letter-spacing: 0.05em; text-transform: uppercase;">
+          Sign In to Atelier Portal
         </button>
       </div>
     </form>
 
-    <div style="margin-top: 2rem; border-top: 1px solid #E2E8F0; padding-top: 1.25rem; text-align: center;">
-      <a href="/" style="font-size: 0.82rem; color: #64748B; text-decoration: underline;">← Return to Customer Storefront</a>
+    <div style="margin-top: 2rem; border-top: 1px solid #282420; padding-top: 1.25rem; text-align: center;">
+      <a href="/" style="font-size: 0.82rem; color: #8F867C; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#FAF8F5'" onmouseout="this.style.color='#8F867C'">← Return to Customer Storefront</a>
     </div>
   </div>
 

@@ -86,6 +86,14 @@ router.get('/shirts', (req, res) => {
   res.redirect('/shop?category=shirts');
 });
 
+router.get('/pants', (req, res) => {
+  res.redirect('/shop?category=pants');
+});
+
+router.get('/jeans', (req, res) => {
+  res.redirect('/shop?category=jeans');
+});
+
 router.get('/fabric-samples', (req, res) => {
   res.redirect('/shop?category=fabric-samples');
 });

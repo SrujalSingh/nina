@@ -5,14 +5,26 @@
   <div style="margin-bottom: 2.5rem;">
     <div style="font-size: 0.82rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;">
       <a href="/" style="color: var(--text-muted);">Home</a> / 
-      <span><%= selectedCategory ? selectedCategory.name : 'All Products' %></span>
+      <a href="/shop" style="color: var(--text-muted);">Collection</a>
+      <% if (selectedCategory) { %>
+        / <a href="/shop?category=<%= selectedCategory.slug %>" style="color: <%= currentSubcategory ? 'var(--text-muted)' : 'var(--accent-gold)' %>;"><%= selectedCategory.name %></a>
+      <% } %>
+      <% if (currentSubcategory) { %>
+        / <span style="color: var(--accent-gold); font-weight: 600;"><%= currentSubcategory %></span>
+      <% } %>
     </div>
-    <h1 class="heading-lg"><%= selectedCategory ? selectedCategory.name : 'The Complete Collection' %></h1>
-    <% if (selectedCategory && selectedCategory.description) { %>
+    <h1 class="heading-lg">
+      <%= currentSubcategory ? `${currentSubcategory} Collection` : (selectedCategory ? selectedCategory.name : 'The Complete Collection') %>
+    </h1>
+    <% if (currentSubcategory) { %>
+      <p style="color: var(--text-muted); max-width: 650px; margin-top: 0.5rem; font-size: 1.05rem;">
+        Browsing certified <strong><%= currentSubcategory %></strong> textiles and swatches tailored by Nina Weaves.
+      </p>
+    <% } else if (selectedCategory && selectedCategory.description) { %>
       <p style="color: var(--text-muted); max-width: 650px; margin-top: 0.5rem; font-size: 1.05rem;"><%= selectedCategory.description %></p>
     <% } else { %>
       <p style="color: var(--text-muted); max-width: 650px; margin-top: 0.5rem; font-size: 1.05rem;">
-        Explore our curated selection of bespoke ready-to-wear shirts and mill-certified fabric swatches.
+        Explore our curated selection of bespoke ready-to-wear shirts, tailored trousers, artisanal denim, and mill-certified fabric swatches.
       </p>
     <% } %>
   </div>
@@ -21,21 +33,25 @@
   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.25rem; padding-bottom: 1.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border-subtle);">
     <!-- Category Tabs -->
     <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
-      <a href="/shop" class="btn btn-sm <%= !currentCategory ? 'btn-primary' : 'btn-outline' %>">All Products</a>
+      <a href="/shop" class="btn btn-sm <%= (!currentCategory && !currentSubcategory) ? 'btn-primary' : 'btn-outline' %>">All Products</a>
       <a href="/shop?category=shirts" class="btn btn-sm <%= currentCategory === 'shirts' ? 'btn-primary' : 'btn-outline' %>">Shirts</a>
-      <a href="/shop?category=fabric-samples" class="btn btn-sm <%= currentCategory === 'fabric-samples' ? 'btn-primary' : 'btn-outline' %>">Fabric Samples</a>
+      <a href="/shop?category=pants" class="btn btn-sm <%= currentCategory === 'pants' ? 'btn-primary' : 'btn-outline' %>">Pants</a>
+      <a href="/shop?category=jeans" class="btn btn-sm <%= currentCategory === 'jeans' ? 'btn-primary' : 'btn-outline' %>">Jeans</a>
+      <a href="/shop?category=fabric-samples" class="btn btn-sm <%= (currentCategory === 'fabric-samples' && !currentSubcategory) ? 'btn-primary' : 'btn-outline' %>">Fabric Samples</a>
     </div>
 
     <!-- Search & Sort Forms -->
     <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
       <form action="/shop" method="GET" style="display: flex; gap: 0.5rem;">
         <% if (currentCategory) { %><input type="hidden" name="category" value="<%= currentCategory %>"><% } %>
+        <% if (currentSubcategory) { %><input type="hidden" name="subcategory" value="<%= currentSubcategory %>"><% } %>
         <input type="text" name="search" value="<%= search %>" placeholder="Search by name or SKU..." class="form-input" style="padding: 0.5rem 0.85rem; width: 220px; font-size: 0.85rem;">
         <button type="submit" class="btn btn-primary btn-sm">Search</button>
       </form>
 
       <form action="/shop" method="GET" id="sort-form">
         <% if (currentCategory) { %><input type="hidden" name="category" value="<%= currentCategory %>"><% } %>
+        <% if (currentSubcategory) { %><input type="hidden" name="subcategory" value="<%= currentSubcategory %>"><% } %>
         <% if (search) { %><input type="hidden" name="search" value="<%= search %>"><% } %>
         <select name="sort" onchange="document.getElementById('sort-form').submit();" class="form-select" style="padding: 0.5rem 0.85rem; font-size: 0.85rem; cursor: pointer;">
           <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Sort by: New Arrivals</option>
@@ -45,6 +61,17 @@
         </select>
       </form>
     </div>
+
+    <!-- Fabric Subcategories Sub-Filter -->
+    <% if (currentCategory === 'fabric-samples' || currentSubcategory) { %>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; width: 100%; margin-top: 0.5rem; align-items: center; padding-top: 1rem; border-top: 1px dashed var(--border-subtle);">
+        <span style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; color: var(--accent-gold); margin-right: 0.5rem;">Fabric Disciplines:</span>
+        <a href="/shop?category=fabric-samples" class="btn btn-sm <%= !currentSubcategory ? 'btn-gold' : 'btn-outline' %>" style="font-size: 0.75rem; padding: 0.35rem 0.85rem;">All Samples</a>
+        <a href="/shop?category=fabric-samples&subcategory=Shirting+Fabric" class="btn btn-sm <%= currentSubcategory === 'Shirting Fabric' ? 'btn-gold' : 'btn-outline' %>" style="font-size: 0.75rem; padding: 0.35rem 0.85rem;">Shirting Fabric</a>
+        <a href="/shop?category=fabric-samples&subcategory=Suiting+Fabric" class="btn btn-sm <%= currentSubcategory === 'Suiting Fabric' ? 'btn-gold' : 'btn-outline' %>" style="font-size: 0.75rem; padding: 0.35rem 0.85rem;">Suiting Fabric</a>
+        <a href="/shop?category=fabric-samples&subcategory=Denim%2FJeans+Fabric" class="btn btn-sm <%= (currentSubcategory && currentSubcategory.includes('Denim')) ? 'btn-gold' : 'btn-outline' %>" style="font-size: 0.75rem; padding: 0.35rem 0.85rem;">Denim/Jeans Fabric</a>
+      </div>
+    <% } %>
   </div>
 
   <!-- Product Grid -->
