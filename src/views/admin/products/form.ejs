@@ -59,10 +59,11 @@
         <div class="admin-form-group">
           <label class="admin-label" for="unit">Selling Unit *</label>
           <select id="unit" name="unit" class="admin-select">
-            <option value="piece" <%= (product && product.unit === 'piece') ? 'selected' : '' %>>Piece (Shirts / Garments)</option>
-            <option value="per sample" <%= (product && product.unit === 'per sample') ? 'selected' : '' %>>Per Sample (Swatch Cards)</option>
-            <option value="per metre" <%= (product && product.unit === 'per metre') ? 'selected' : '' %>>Per Metre (Fabric Lengths)</option>
-            <option value="set" <%= (product && product.unit === 'set') ? 'selected' : '' %>>Set (Swatch Palette)</option>
+            <option value="metre" <%= (product && (product.unit === 'metre' || product.unit === 'per metre')) ? 'selected' : '' %>>Metre (Fabric Samples &amp; Textiles — B2B Length in Metres)</option>
+            <option value="piece" <%= (product && (!product.unit || product.unit === 'piece')) ? 'selected' : '' %>>Piece (Shirts / Garments — B2B Quantity in Pieces)</option>
+            <option value="pair" <%= (product && product.unit === 'pair') ? 'selected' : '' %>>Pair (Pants / Jeans / Trousers)</option>
+            <option value="per sample" <%= (product && product.unit === 'per sample') ? 'selected' : '' %>>Per Sample (Individual Swatches)</option>
+            <option value="set" <%= (product && product.unit === 'set') ? 'selected' : '' %>>Set (Palette / Box)</option>
           </select>
         </div>
 

@@ -410,14 +410,16 @@ router.get('/categories', (req, res) => {
 
 router.post('/categories/new', (req, res) => {
   try {
-    const { name, description, display_order, is_active } = req.body;
+    const { name, description, image_url, display_order, is_active, show_on_homepage } = req.body;
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
     categoryModel.create({
       name: name.trim(),
       slug,
       description: (description || '').trim(),
+      image_url: (image_url || '').trim(),
       display_order: parseInt(display_order || 0, 10),
-      is_active: is_active ? 1 : 0
+      is_active: is_active ? 1 : 0,
+      show_on_homepage: show_on_homepage ? 1 : 0
     });
     req.session.successMsg = `Category "${name}" created.`;
   } catch (error) {
@@ -426,15 +428,39 @@ router.post('/categories/new', (req, res) => {
   res.redirect('/admin/categories');
 });
 
+router.post('/categories/:id/toggle-homepage', (req, res) => {
+  try {
+    categoryModel.toggleHomepage(req.params.id);
+    const cat = categoryModel.getById(req.params.id);
+    req.session.successMsg = `Homepage spotlight updated for "${cat ? cat.name : 'Category'}".`;
+  } catch (error) {
+    req.session.errorMsg = error.message;
+  }
+  res.redirect('/admin/categories');
+});
+
+router.post('/categories/:id/toggle-active', (req, res) => {
+  try {
+    categoryModel.toggleActive(req.params.id);
+    const cat = categoryModel.getById(req.params.id);
+    req.session.successMsg = `Visibility status updated for "${cat ? cat.name : 'Category'}".`;
+  } catch (error) {
+    req.session.errorMsg = error.message;
+  }
+  res.redirect('/admin/categories');
+});
+
 router.post('/categories/edit/:id', (req, res) => {
   try {
-    const { name, slug, description, display_order, is_active } = req.body;
+    const { name, slug, description, image_url, display_order, is_active, show_on_homepage } = req.body;
     categoryModel.update(req.params.id, {
       name: name.trim(),
-      slug: slug.trim(),
+      slug: (slug || name.toLowerCase().replace(/[^a-z0-9]+/g, '-')).trim(),
       description: (description || '').trim(),
+      image_url: (image_url || '').trim(),
       display_order: parseInt(display_order || 0, 10),
-      is_active: is_active ? 1 : 0
+      is_active: is_active ? 1 : 0,
+      show_on_homepage: show_on_homepage ? 1 : 0
     });
     req.session.successMsg = `Category "${name}" updated.`;
   } catch (error) {

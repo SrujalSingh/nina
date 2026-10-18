@@ -210,7 +210,7 @@ transaction(() => {
       }),
       450,
       null,
-      'swatch card',
+      'metre',
       5,
       'active',
       1,

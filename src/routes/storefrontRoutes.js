@@ -34,12 +34,15 @@ router.get('/', (req, res) => {
     limit: 4
   });
 
+  const homepageCategories = categoryModel.getHomepageCategories();
+
   res.render('storefront/home', {
     title: 'Nina Weaves | Handcrafted Luxury Shirts & Bespoke Textiles',
     metaDescription: 'Discover mastercrafted luxury shirts and museum-grade textile swatches. Tailored from rare Egyptian Giza cotton and pure Belgian linen, ordered via WhatsApp.',
     featuredShirts,
     featuredSamples,
-    newArrivals
+    newArrivals,
+    homepageCategories
   });
 });
 
@@ -197,38 +200,46 @@ router.post('/api/checkout/whatsapp', (req, res) => {
     const currencySymbol = settings.currency_symbol || '₹';
 
     // Format readable message for WhatsApp
-    let msg = `*NEW ORDER INQUIRY — NINA WEAVES*\n`;
+    let msg = `*B2B ORDER & ATELIER INQUIRY — NINA WEAVES*\n`;
     msg += `--------------------------------------\n`;
     msg += `*Order Reference:* ${inquiryResult.orderReference}\n`;
-    msg += `*Date:* ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}\n\n`;
+    msg += `*Date:* ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}\n`;
+    msg += `*Order Type:* B2B Apparel & Textile Sample Inquiry\n\n`;
 
-    msg += `*Customer Details:*\n`;
-    msg += `• *Name:* ${customerName.trim()}\n`;
-    msg += `• *Phone:* ${customerPhone.trim()}\n`;
+    msg += `*Client / Buyer Details:*\n`;
+    msg += `• *Contact Name:* ${customerName.trim()}\n`;
+    msg += `• *WhatsApp Mobile:* ${customerPhone.trim()}\n`;
     if (customerEmail && customerEmail.trim()) {
       msg += `• *Email:* ${customerEmail.trim()}\n`;
     }
     if (deliveryAddress && deliveryAddress.trim()) {
-      msg += `• *Delivery Address:* ${deliveryAddress.trim()}\n`;
+      msg += `• *Delivery / Atelier Address:* ${deliveryAddress.trim()}\n`;
     }
 
-    msg += `\n*Selected Pieces:*\n`;
+    msg += `\n*Selected Items (Sample Metres & Garment Quantities):*\n`;
     validatedItems.forEach((it, idx) => {
+      const isMetres = it.unit === 'metre';
       msg += `\n${idx + 1}. *${it.productName}*\n`;
       msg += `   • SKU: ${it.sku}\n`;
       if (it.size) msg += `   • Size: ${it.size}\n`;
-      if (it.quality) msg += `   • Fabric / Quality: ${it.quality}\n`;
-      msg += `   • Quantity: ${it.quantity} ${it.unit || 'piece'}(s)\n`;
-      msg += `   • Price: ${currencySymbol}${it.unitPrice.toLocaleString('en-IN')} each (Total: ${currencySymbol}${it.itemTotal.toLocaleString('en-IN')})\n`;
+      if (it.quality) msg += `   • Fabric Grade / Quality: ${it.quality}\n`;
+      if (isMetres) {
+        msg += `   • *Order Length:* ${it.quantity} Metres\n`;
+        msg += `   • *Rate:* ${currencySymbol}${it.unitPrice.toLocaleString('en-IN')} / metre\n`;
+      } else {
+        msg += `   • *Quantity:* ${it.quantity} ${it.unit === 'pair' ? 'Pairs' : 'Pieces'}\n`;
+        msg += `   • *Rate:* ${currencySymbol}${it.unitPrice.toLocaleString('en-IN')} / piece\n`;
+      }
+      msg += `   • *Line Subtotal:* ${currencySymbol}${it.itemTotal.toLocaleString('en-IN')}\n`;
     });
 
     msg += `\n--------------------------------------\n`;
-    msg += `*Estimated Subtotal:* ${currencySymbol}${subtotal.toLocaleString('en-IN')}\n`;
+    msg += `*Estimated Total Value:* ${currencySymbol}${subtotal.toLocaleString('en-IN')}\n`;
     if (notes && notes.trim()) {
-      msg += `*Special Instructions:* ${notes.trim()}\n`;
+      msg += `*B2B Specifications / Notes:* ${notes.trim()}\n`;
     }
     msg += `--------------------------------------\n`;
-    msg += `_Hello Atelier Nina Weaves, I would like to place and confirm this order inquiry. Please verify stock availability and guide me on next steps!_`;
+    msg += `_Hello Atelier Nina Weaves, I am submitting this B2B order inquiry for sample textiles in metres and finished garments in quantity. Please confirm stock availability, fabric roll yardage, and dispatch schedule!_`;
 
     const encodedMessage = encodeURIComponent(msg);
     const whatsappUrl = `https://wa.me/${whatsappBusinessNumber}?text=${encodedMessage}`;

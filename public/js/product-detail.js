@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Quantity Controls
+  // Quantity Controls & Quick Presets
   if (qtyMinus && qtyPlus && qtyInput) {
     qtyMinus.addEventListener('click', () => {
       let val = parseInt(qtyInput.value, 10) || 1;
@@ -76,10 +76,30 @@ document.addEventListener('DOMContentLoaded', () => {
     qtyPlus.addEventListener('click', () => {
       let val = parseInt(qtyInput.value, 10) || 1;
       const currentVar = getSelectedVariation();
-      const max = currentVar ? currentVar.stock_quantity : 99;
+      const max = currentVar && currentVar.stock_quantity ? currentVar.stock_quantity : 999;
       if (val < max) qtyInput.value = val + 1;
     });
+
+    qtyInput.addEventListener('change', () => {
+      let val = parseInt(qtyInput.value, 10);
+      if (isNaN(val) || val < 1) val = 1;
+      const currentVar = getSelectedVariation();
+      const max = currentVar && currentVar.stock_quantity ? currentVar.stock_quantity : 999;
+      if (val > max) val = max;
+      qtyInput.value = val;
+    });
   }
+
+  // Quick B2B Preset Buttons (e.g. 1m, 2m, 5m, 10m, 25m or 1pc, 5pcs, 10pcs)
+  const presetBtns = document.querySelectorAll('.quick-qty-preset');
+  presetBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const val = parseInt(btn.getAttribute('data-val'), 10);
+      if (val && qtyInput) {
+        qtyInput.value = val;
+      }
+    });
+  });
 
   function getSelectedVariation() {
     if (variations.length === 0) return null;

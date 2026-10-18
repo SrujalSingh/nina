@@ -40,29 +40,25 @@
     </div>
 
     <div class="category-spotlight-grid">
-      <!-- Category 1: Shirts -->
-      <a href="/shop?category=shirts" class="category-card">
-        <img src="/uploads/products/shirt-oxford-1.svg" alt="Bespoke Shirts" class="category-card-bg">
-        <div class="category-card-overlay"></div>
-        <div class="category-card-content">
-          <span class="subheading" style="color: #E2D1BF;">Category 01</span>
-          <h3 class="category-card-title">Handcrafted Shirts</h3>
-          <p class="category-card-desc">Single-needle tailored garments crafted from Egyptian Giza cottons and European flax linens in sizes XS to XXL and custom dimensions.</p>
-          <span class="btn btn-outline btn-sm" style="color:#FFF; border-color:#FFF; width:fit-content;">Browse Shirts Collection →</span>
-        </div>
-      </a>
-
-      <!-- Category 2: Fabric Samples -->
-      <a href="/shop?category=fabric-samples" class="category-card">
-        <img src="/uploads/products/sample-giza-1.svg" alt="Fabric Samples" class="category-card-bg">
-        <div class="category-card-overlay"></div>
-        <div class="category-card-content">
-          <span class="subheading" style="color: #E2D1BF;">Category 02</span>
-          <h3 class="category-card-title">Fabric Samples &amp; Swatches</h3>
-          <p class="category-card-desc">Mill-certified swatches, trial cuts, and per-metre textiles. Test weave density, yarn count, and natural drape first-hand.</p>
-          <span class="btn btn-outline btn-sm" style="color:#FFF; border-color:#FFF; width:fit-content;">Order Fabric Samples →</span>
-        </div>
-      </a>
+      <% 
+        const catsToDisplay = (typeof homepageCategories !== 'undefined' && homepageCategories && homepageCategories.length > 0)
+          ? homepageCategories
+          : (typeof categories !== 'undefined' && categories ? categories : []);
+      %>
+      <% if (catsToDisplay && catsToDisplay.length > 0) { %>
+        <% catsToDisplay.forEach((cat, index) => { %>
+          <a href="/shop?category=<%= cat.slug %>" class="category-card">
+            <img src="<%= cat.image_url || '/uploads/products/shirt-oxford-1.svg' %>" alt="<%= cat.name %>" class="category-card-bg" loading="lazy">
+            <div class="category-card-overlay"></div>
+            <div class="category-card-content">
+              <span class="subheading" style="color: #E2D1BF; font-size: 0.72rem; letter-spacing: 0.15em;">Category 0<%= index + 1 %></span>
+              <h3 class="category-card-title"><%= cat.name %></h3>
+              <p class="category-card-desc"><%= cat.description || 'Mastercrafted collection tailored from the finest textiles.' %></p>
+              <span class="btn btn-outline btn-sm" style="color:#FFF; border-color: rgba(255,255,255,0.7); width:fit-content; padding: 0.4rem 0.8rem; font-size: 0.75rem;">Explore <%= cat.name %> →</span>
+            </div>
+          </a>
+        <% }) %>
+      <% } %>
     </div>
   </div>
 </section>
@@ -222,7 +218,7 @@
 </section>
 
 <!-- Direct WhatsApp Consultation CTA -->
-<section class="section-padding" style="text-align: center; background-color: #1E1B18; color: #FAF8F5;">
+<section class="section-padding concierge-cta-section" style="text-align: center; background: linear-gradient(180deg, #181512 0%, #040707 100%); color: #FAF8F5; margin-bottom: 0;">
   <div class="container" style="max-width: 780px;">
     <span class="subheading" style="color: #C5A880;">Personal Atelier Concierge</span>
     <h2 class="heading-lg" style="margin-top: 0.75rem; margin-bottom: 1.25rem; color: #FFF;">

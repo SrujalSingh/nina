@@ -112,4 +112,95 @@
   </div>
 </div>
 
+<!-- Stock Adjustment & Replenishment Modal -->
+<div id="stockAdjustModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(2px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
+  <div style="background: #FFFFFF; border: 1px solid var(--admin-border); border-radius: 12px; width: 100%; max-width: 520px; box-shadow: 0 25px 60px rgba(0,0,0,0.25); overflow: hidden;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--admin-border); background: #FAF8F5;">
+      <h3 style="margin: 0; font-size: 1.15rem; font-weight: 700; color: var(--admin-text-main);">Adjust &amp; Replenish Stock</h3>
+      <button type="button" onclick="closeStockModal()" style="background: transparent; border: none; font-size: 1.5rem; line-height: 1; color: var(--admin-text-muted); cursor: pointer;" title="Close modal">&times;</button>
+    </div>
+
+    <form action="/admin/inventory/adjust" method="POST" style="padding: 1.5rem;">
+      <input type="hidden" id="modal_var_id" name="variation_id">
+
+      <div style="background: #FAF8F5; border: 1px solid var(--admin-border); border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1.25rem;">
+        <div id="modal_product_name" style="font-weight: 700; color: var(--admin-text-main); font-size: 0.95rem;"></div>
+        <div style="display: flex; gap: 1rem; margin-top: 0.35rem; font-size: 0.82rem; color: var(--admin-text-muted);">
+          <span>SKU: <code id="modal_sku" style="color: #8F7B6B; background: #F1ECE4; padding: 1px 6px; border-radius: 4px;"></code></span>
+          <span>Current Units: <strong id="modal_cur_stock" style="color: var(--admin-text-main); font-size: 0.95rem;"></strong></span>
+        </div>
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-label" for="adj_type">Adjustment Type *</label>
+        <select id="adj_type" name="adjustment_type" class="admin-select" required onchange="handleAdjTypeChange(this.value)">
+          <option value="add">➕ Incoming Stock / Replenish from Mill (Add to stock)</option>
+          <option value="physical_count">📊 Physical Inventory Recount (Set exact stock)</option>
+          <option value="remove">➖ Remove / Write-off Stock (Deduct from stock)</option>
+          <option value="damaged">⚠️ Damaged / Defective Stock (Deduct from stock)</option>
+          <option value="sold">🛍️ In-Store Offline Sale (Deduct from stock)</option>
+        </select>
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-label" id="qty_label" for="qty_val">Units to Add *</label>
+        <input type="number" id="qty_val" name="quantity_value" class="admin-input" min="1" value="10" required>
+        <small id="qty_help" style="color: var(--admin-text-muted); font-size: 0.78rem; display: block; margin-top: 0.3rem;">
+          Enter the number of units received to add to the existing stock.
+        </small>
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-label" for="adj_reason">Adjustment Reason *</label>
+        <input type="text" id="adj_reason" name="reason" class="admin-input" required placeholder="e.g. Weaving mill delivery batch, seasonal restock, count audit">
+      </div>
+
+      <div class="admin-form-group" style="margin-bottom: 1.5rem;">
+        <label class="admin-label" for="adj_notes">Additional Audit Notes (Optional)</label>
+        <textarea id="adj_notes" name="notes" rows="2" class="admin-textarea" placeholder="Internal notes for stock movement audit log..."></textarea>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+        <button type="button" onclick="closeStockModal()" class="admin-btn admin-btn-secondary">Cancel</button>
+        <button type="submit" class="admin-btn admin-btn-primary">Apply Stock Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openStockModal(varId, sku, curStock, prodName) {
+    document.getElementById('modal_var_id').value = varId;
+    document.getElementById('modal_sku').textContent = sku;
+    document.getElementById('modal_product_name').textContent = prodName;
+    document.getElementById('modal_cur_stock').textContent = curStock + ' units';
+    document.getElementById('adj_type').value = 'add';
+    handleAdjTypeChange('add');
+    document.getElementById('stockAdjustModal').style.display = 'flex';
+  }
+
+  function closeStockModal() {
+    document.getElementById('stockAdjustModal').style.display = 'none';
+  }
+
+  function handleAdjTypeChange(type) {
+    const lbl = document.getElementById('qty_label');
+    const hlp = document.getElementById('qty_help');
+    if (type === 'physical_count') {
+      lbl.textContent = 'Exact Physical Count *';
+      hlp.textContent = 'Set the exact number of units physically in the atelier/warehouse.';
+    } else if (type === 'add') {
+      lbl.textContent = 'Units to Add *';
+      hlp.textContent = 'Enter the number of units received to add to existing stock.';
+    } else {
+      lbl.textContent = 'Units to Deduct *';
+      hlp.textContent = 'Enter the number of units to subtract from available stock.';
+    }
+  }
+
+  document.getElementById('stockAdjustModal').addEventListener('click', function(e) {
+    if (e.target === this) closeStockModal();
+  });
+</script>
+
 <%- include('../../layouts/admin-footer') %>

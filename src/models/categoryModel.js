@@ -16,22 +16,34 @@ const categoryModel = {
     return db.prepare('SELECT * FROM categories WHERE id = ?').get(id);
   },
 
-  create({ name, slug, description, image_url, display_order = 0, is_active = 1 }) {
+  getHomepageCategories() {
+    return db.prepare('SELECT * FROM categories WHERE is_active = 1 AND show_on_homepage = 1 ORDER BY display_order ASC, name ASC').all();
+  },
+
+  toggleHomepage(id) {
+    return db.prepare('UPDATE categories SET show_on_homepage = CASE WHEN show_on_homepage = 1 THEN 0 ELSE 1 END WHERE id = ?').run(id);
+  },
+
+  toggleActive(id) {
+    return db.prepare('UPDATE categories SET is_active = CASE WHEN is_active = 1 THEN 0 ELSE 1 END WHERE id = ?').run(id);
+  },
+
+  create({ name, slug, description, image_url, display_order = 0, is_active = 1, show_on_homepage = 1 }) {
     const stmt = db.prepare(`
-      INSERT INTO categories (name, slug, description, image_url, display_order, is_active)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO categories (name, slug, description, image_url, display_order, is_active, show_on_homepage)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `);
-    const res = stmt.run(name, slug, description || '', image_url || '', display_order, is_active ? 1 : 0);
+    const res = stmt.run(name, slug, description || '', image_url || '', display_order, is_active ? 1 : 0, show_on_homepage ? 1 : 0);
     return res.lastInsertRowid;
   },
 
-  update(id, { name, slug, description, image_url, display_order, is_active }) {
+  update(id, { name, slug, description, image_url, display_order, is_active, show_on_homepage = 1 }) {
     const stmt = db.prepare(`
       UPDATE categories
-      SET name = ?, slug = ?, description = ?, image_url = ?, display_order = ?, is_active = ?
+      SET name = ?, slug = ?, description = ?, image_url = ?, display_order = ?, is_active = ?, show_on_homepage = ?
       WHERE id = ?
     `);
-    return stmt.run(name, slug, description || '', image_url || '', display_order, is_active ? 1 : 0, id);
+    return stmt.run(name, slug, description || '', image_url || '', display_order, is_active ? 1 : 0, show_on_homepage ? 1 : 0, id);
   },
 
   delete(id) {

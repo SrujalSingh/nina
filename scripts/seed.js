@@ -117,15 +117,16 @@ Welcome to Nina Weaves. By browsing our catalogue or initiating orders through o
     }
     console.log('[Policies] Seeded website policies and brand content.');
 
-    // 4. Default Categories: 1. Shirts, 2. Fabric Samples
+    // 4. Default Categories: 1. Shirts, 2. Fabric Samples, 3. Pants, 4. Jeans
     const catCheck = db.prepare('SELECT count(*) as count FROM categories').get();
     if (catCheck.count === 0) {
-      const catStmt = db.prepare('INSERT INTO categories (name, slug, description, image_url, display_order, is_active) VALUES (?, ?, ?, ?, ?, ?)');
+      const catStmt = db.prepare('INSERT INTO categories (name, slug, description, image_url, display_order, is_active, show_on_homepage) VALUES (?, ?, ?, ?, ?, ?, ?)');
       catStmt.run(
         'Shirts',
         'shirts',
         'Mastercrafted ready-to-wear and bespoke tailored shirts crafted from the finest Egyptian Giza cottons and European linens.',
         '/uploads/products/shirt-oxford-1.svg',
+        1,
         1,
         1
       );
@@ -135,6 +136,7 @@ Welcome to Nina Weaves. By browsing our catalogue or initiating orders through o
         'Certified textile swatches and tailor cuts to experience weave quality, hand feel, and drape before commissioning your wardrobe.',
         '/uploads/products/sample-giza-1.svg',
         2,
+        1,
         1
       );
       catStmt.run(
@@ -143,6 +145,7 @@ Welcome to Nina Weaves. By browsing our catalogue or initiating orders through o
         'Precision-tailored trousers and structured chinos crafted from fine wools and Belgian linen.',
         '/uploads/products/pants-wool-1.svg',
         3,
+        1,
         1
       );
       catStmt.run(
@@ -151,6 +154,7 @@ Welcome to Nina Weaves. By browsing our catalogue or initiating orders through o
         'Artisanal selvedge denim and premium washed jeans engineered with timeless sartorial cuts.',
         '/uploads/products/jeans-selvedge-1.svg',
         4,
+        1,
         1
       );
       console.log('[Categories] Seeded default categories: Shirts, Fabric Samples, Pants, Jeans.');
@@ -334,7 +338,7 @@ Welcome to Nina Weaves. By browsing our catalogue or initiating orders through o
         }),
         249,
         null,
-        'per sample',
+        'metre',
         10,
         'active',
         1,
@@ -372,7 +376,7 @@ Welcome to Nina Weaves. By browsing our catalogue or initiating orders through o
         }),
         299,
         null,
-        'per sample',
+        'metre',
         10,
         'active',
         1,
@@ -410,7 +414,7 @@ Welcome to Nina Weaves. By browsing our catalogue or initiating orders through o
         }),
         399,
         null,
-        'per sample',
+        'metre',
         5,
         'active',
         0,

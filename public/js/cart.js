@@ -56,13 +56,40 @@ const NinaCart = {
     if (!item) return;
 
     const qty = parseInt(newQty, 10);
-    if (qty <= 0) {
+    if (isNaN(qty) || qty <= 0) {
       this.removeItem(key);
       return;
     }
 
-    item.quantity = Math.min(qty, item.maxStock || 99);
+    item.quantity = Math.min(qty, item.maxStock || 999);
     this.saveItems(items);
+  },
+
+  updateQuantityLive(key, newQty) {
+    const qty = parseInt(newQty, 10);
+    if (isNaN(qty) || qty < 1) return;
+    let items = this.getItems();
+    const item = items.find(i => i.key === key);
+    if (!item) return;
+
+    item.quantity = Math.min(qty, item.maxStock || 999);
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+    } catch (e) {}
+
+    // Update individual line total
+    const lineTotal = document.querySelector(`.cart-line-total[data-key="${key}"]`);
+    if (lineTotal) {
+      lineTotal.textContent = `₹${(item.unitPrice * item.quantity).toLocaleString('en-IN')}`;
+    }
+
+    // Update overall totals
+    const subtotal = this.getSubtotal();
+    const subtotalElem = document.getElementById('cart-subtotal-val');
+    const totalElem = document.getElementById('cart-total-val');
+    if (subtotalElem) subtotalElem.textContent = `₹${subtotal.toLocaleString('en-IN')}`;
+    if (totalElem) totalElem.textContent = `₹${subtotal.toLocaleString('en-IN')}`;
+    this.updateBadge();
   },
 
   removeItem(key) {
@@ -149,26 +176,67 @@ function renderCartPage() {
 
   let html = '';
   items.forEach(item => {
+    const isMetre = item.unit === 'metre' || (item.productName && (item.productName.toLowerCase().includes('swatch') || item.productName.toLowerCase().includes('fabric')));
+    const unitLabel = isMetre ? 'Metres' : (item.unit === 'pair' ? 'Pairs' : 'Pieces');
     const itemSubtotal = item.unitPrice * item.quantity;
+
     html += `
-      <div class="cart-item" data-key="${item.key}">
-        <img src="${item.image || '/images/hero-banner.svg'}" alt="${item.productName}" class="cart-item-img">
-        <div class="cart-item-info">
-          <div class="cart-item-title">${item.productName}</div>
-          <div class="cart-item-meta">
-            ${item.size ? `<span>Size: <strong>${item.size}</strong></span> • ` : ''}
-            <span>Quality: <strong>${item.quality}</strong></span>
-            <div><small style="color:#8C8377">SKU: ${item.sku}</small></div>
-          </div>
-          <div class="cart-item-footer">
-            <div class="qty-control">
-              <button type="button" class="qty-btn" onclick="NinaCart.updateQuantity('${item.key}', ${item.quantity - 1}); renderCartPage();">−</button>
-              <input type="text" class="qty-input" value="${item.quantity}" readonly>
-              <button type="button" class="qty-btn" onclick="NinaCart.updateQuantity('${item.key}', ${item.quantity + 1}); renderCartPage();">+</button>
+      <div class="cart-item" data-key="${item.key}" style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.25rem;">
+        <img src="${item.image || '/images/hero-banner.svg'}" alt="${item.productName}" class="cart-item-img" style="border-radius: 6px; object-fit: cover;">
+        <div class="cart-item-info" style="flex-grow: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">
+            <div>
+              <span class="badge" style="font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 600; margin-bottom: 0.35rem; display: inline-block; ${isMetre ? 'background:#ECFDF5; color:#065F46; border:1px solid #A7F3D0;' : 'background:#EFF6FF; color:#1E40AF; border:1px solid #BFDBFE;'}">
+                ${isMetre ? '📏 Fabric Sample Cut (in Metres)' : '👔 Tailored Garment (in Quantity)'}
+              </span>
+              <div class="cart-item-title" style="font-size: 1.15rem; font-weight: 600;">${item.productName}</div>
             </div>
             <div style="text-align: right;">
-              <div style="font-weight: 700; font-size: 1.05rem;">₹${itemSubtotal.toLocaleString('en-IN')}</div>
-              <button type="button" class="cart-remove-btn" onclick="NinaCart.removeItem('${item.key}'); renderCartPage();">Remove</button>
+              <div class="cart-line-total" data-key="${item.key}" style="font-weight: 700; font-size: 1.2rem; color: var(--text-main);">
+                ₹${itemSubtotal.toLocaleString('en-IN')}
+              </div>
+              <small style="color: var(--text-muted); font-size: 0.78rem;">
+                ₹${item.unitPrice.toLocaleString('en-IN')} / ${isMetre ? 'metre' : (item.unit || 'piece')}
+              </small>
+            </div>
+          </div>
+
+          <div class="cart-item-meta" style="margin-top: 0.4rem; color: var(--text-muted); font-size: 0.85rem;">
+            ${item.size ? `<span>Size: <strong style="color: var(--text-main);">${item.size}</strong></span> • ` : ''}
+            <span>Grade: <strong style="color: var(--text-main);">${item.quality}</strong></span>
+            <span style="margin-left: 0.5rem; font-size: 0.75rem; color: #8F867C;">(SKU: ${item.sku})</span>
+          </div>
+
+          <!-- B2B Quantity & Metre Editing Controls -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding-top: 0.85rem; border-top: 1px dashed var(--border-subtle); flex-wrap: wrap; gap: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+              <span style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">
+                ${isMetre ? 'Edit Metres:' : 'Edit Quantity:'}
+              </span>
+              <div class="qty-control" style="background: #FAF8F5; border: 1px solid var(--border-strong);">
+                <button type="button" class="qty-btn" onclick="NinaCart.updateQuantity('${item.key}', ${item.quantity - 1}); renderCartPage();" title="Decrease">−</button>
+                <input type="number" min="1" max="${item.maxStock || 999}" class="qty-input editable-qty-input" 
+                  value="${item.quantity}" 
+                  onchange="NinaCart.updateQuantity('${item.key}', this.value); renderCartPage();"
+                  oninput="NinaCart.updateQuantityLive('${item.key}', this.value);"
+                  onkeyup="if(event.key==='Enter') { NinaCart.updateQuantity('${item.key}', this.value); renderCartPage(); }"
+                  style="width: 70px; text-align: center; font-weight: 700; font-size: 1rem; border: none; background: transparent;"
+                  title="Click or type to edit ${isMetre ? 'metres' : 'quantity'}">
+                <button type="button" class="qty-btn" onclick="NinaCart.updateQuantity('${item.key}', ${item.quantity + 1}); renderCartPage();" title="Increase">+</button>
+              </div>
+              <span style="font-weight: 700; font-size: 0.88rem; color: var(--text-main);">${unitLabel}</span>
+
+              <!-- Quick Adjustment Shortcuts -->
+              <div style="display: inline-flex; gap: 4px; margin-left: 0.4rem;">
+                <button type="button" class="btn btn-outline btn-xs" onclick="NinaCart.updateQuantity('${item.key}', ${item.quantity + 5}); renderCartPage();" style="font-size: 0.72rem; padding: 2px 7px;" title="Add 5 ${unitLabel}">+5</button>
+                <button type="button" class="btn btn-outline btn-xs" onclick="NinaCart.updateQuantity('${item.key}', ${item.quantity + 10}); renderCartPage();" style="font-size: 0.72rem; padding: 2px 7px;" title="Add 10 ${unitLabel}">+10</button>
+              </div>
+            </div>
+
+            <div>
+              <button type="button" class="cart-remove-btn" onclick="NinaCart.removeItem('${item.key}'); renderCartPage();" style="color: var(--color-danger); background: transparent; border: none; cursor: pointer; font-size: 0.82rem; font-weight: 600;">
+                ✕ Remove Item
+              </button>
             </div>
           </div>
         </div>

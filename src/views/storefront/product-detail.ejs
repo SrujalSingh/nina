@@ -31,9 +31,15 @@
       <div class="detail-header">
         <span class="subheading"><%= product.subcategory || product.category_name %></span>
         <h1 class="heading-lg" style="margin-top: 0.4rem; margin-bottom: 0.4rem;"><%= product.name %></h1>
-        <div style="display: flex; gap: 1rem; align-items: center;">
+        
+        <% const isFabric = product.category_slug === 'fabric-samples' || product.unit === 'metre'; %>
+        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem;">
           <span style="font-size: 0.82rem; color: var(--text-muted);">SKU: <strong id="detail-sku-display"><%= product.sku %></strong></span>
-          <span style="font-size: 0.82rem; color: var(--text-muted);">Unit: <strong><%= product.unit || 'piece' %></strong></span>
+          <span style="font-size: 0.82rem; color: var(--text-muted);">•</span>
+          <span style="font-size: 0.82rem; color: var(--text-muted);">Unit: <strong><%= isFabric ? 'Metre' : (product.unit || 'piece') %></strong></span>
+          <span class="badge" style="font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 600; <%= isFabric ? 'background:#ECFDF5; color:#065F46; border:1px solid #A7F3D0;' : 'background:#EFF6FF; color:#1E40AF; border:1px solid #BFDBFE;' %>">
+            <%= isFabric ? '📏 B2B Fabric Order (Sold in Metres)' : '👔 B2B Garment Order (Sold in Quantity)' %>
+          </span>
         </div>
 
         <div class="detail-price-box">
@@ -42,6 +48,7 @@
             <span class="price-original" style="font-size: 1.15rem;">₹<%= product.base_price.toLocaleString('en-IN') %></span>
             <span class="badge badge-sale">Special Price</span>
           <% } %>
+          <span style="font-size: 0.95rem; color: var(--text-muted); font-weight: 500;">/ <%= isFabric ? 'metre' : (product.unit || 'piece') %></span>
         </div>
       </div>
 
@@ -111,17 +118,51 @@
         </div>
       </div>
 
-      <!-- Quantity Selector & Actions -->
-      <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-top: 0.5rem;">
-        <div class="qty-control">
-          <button type="button" class="qty-btn" id="detail-qty-minus">−</button>
-          <input type="text" id="detail-qty-input" class="qty-input" value="1" readonly>
-          <button type="button" class="qty-btn" id="detail-qty-plus">+</button>
+      <!-- B2B Quantity / Metres Selector & Actions -->
+      <div style="margin-top: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <label for="detail-qty-input" style="font-size: 0.88rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-main);">
+            <%= isFabric ? 'Order Length in Metres:' : 'Order Quantity (Pieces):' %>
+          </label>
+          <span style="font-size: 0.78rem; color: var(--text-muted);">
+            <%= isFabric ? 'Custom cut per continuous metre' : 'Enter desired piece count' %>
+          </span>
         </div>
 
-        <button type="button" id="add-to-cart-btn" class="btn btn-primary btn-lg" style="flex-grow: 1;">
-          Add to Shopping Bag
-        </button>
+        <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+          <div class="qty-control" style="background: #FFF; border: 1px solid var(--border-strong);">
+            <button type="button" class="qty-btn" id="detail-qty-minus" title="Decrease">−</button>
+            <input type="number" id="detail-qty-input" class="qty-input" value="1" min="1" max="999" 
+              style="width: 75px; text-align: center; font-weight: 700; font-size: 1.1rem; border: none; background: transparent;"
+              title="<%= isFabric ? 'Enter metres' : 'Enter quantity' %>">
+            <button type="button" class="qty-btn" id="detail-qty-plus" title="Increase">+</button>
+          </div>
+          <span style="font-weight: 700; font-size: 0.95rem; color: var(--text-main); min-width: 65px;" id="detail-unit-badge">
+            <%= isFabric ? 'Metres' : (product.unit === 'pair' ? 'Pairs' : 'Pieces') %>
+          </span>
+
+          <button type="button" id="add-to-cart-btn" class="btn btn-primary btn-lg" style="flex-grow: 1;">
+            <%= isFabric ? 'Add Metres to Shopping Bag' : 'Add to Shopping Bag' %>
+          </button>
+        </div>
+
+        <!-- Quick B2B Preset Selectors -->
+        <div style="display: flex; gap: 0.4rem; align-items: center; margin-top: 0.75rem; flex-wrap: wrap;">
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Quick Select:</span>
+          <% if (isFabric) { %>
+            <button type="button" class="btn btn-outline btn-xs quick-qty-preset" data-val="1" style="font-size: 0.75rem; padding: 3px 8px;">1m (Sample)</button>
+            <button type="button" class="btn btn-outline btn-xs quick-qty-preset" data-val="2" style="font-size: 0.75rem; padding: 3px 8px;">2m</button>
+            <button type="button" class="btn btn-outline btn-xs quick-qty-preset" data-val="5" style="font-size: 0.75rem; padding: 3px 8px;">5m (Trial Cut)</button>
+            <button type="button" class="btn btn-outline btn-xs quick-qty-preset" data-val="10" style="font-size: 0.75rem; padding: 3px 8px;">10m</button>
+            <button type="button" class="btn btn-outline btn-xs quick-qty-preset" data-val="25" style="font-size: 0.75rem; padding: 3px 8px;">25m (Bolt)</button>
+          <% } else { %>
+            <button type="button" class="btn btn-outline btn-xs quick-qty-preset" data-val="1" style="font-size: 0.75rem; padding: 3px 8px;">1 pc</button>
+            <button type="button" class="btn btn-outline btn-xs quick-qty-preset" data-val="2" style="font-size: 0.75rem; padding: 3px 8px;">2 pcs</button>
+            <button type="button" class="btn btn-outline btn-xs quick-qty-preset" data-val="5" style="font-size: 0.75rem; padding: 3px 8px;">5 pcs</button>
+            <button type="button" class="btn btn-outline btn-xs quick-qty-preset" data-val="10" style="font-size: 0.75rem; padding: 3px 8px;">10 pcs (Wholesale)</button>
+            <button type="button" class="btn btn-outline btn-xs quick-qty-preset" data-val="25" style="font-size: 0.75rem; padding: 3px 8px;">25 pcs</button>
+          <% } %>
+        </div>
       </div>
 
       <!-- WhatsApp Order Consultation Button -->

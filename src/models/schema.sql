@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS categories (
     image_url TEXT,
     display_order INTEGER DEFAULT 0,
     is_active INTEGER DEFAULT 1,
+    show_on_homepage INTEGER DEFAULT 1,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -2,27 +2,28 @@
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
   <div>
-    <h1 style="font-size: 1.5rem; font-weight: 700;">Categories Management</h1>
-    <p style="color: var(--admin-text-muted); font-size: 0.88rem;">Manage default categories (Shirts, Fabric Samples) and create custom sections.</p>
+    <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--admin-text-main);">Categories Management</h1>
+    <p style="color: var(--admin-text-muted); font-size: 0.88rem;">Manage store categories and choose exactly which categories appear in the <strong>"Explore Our Core Categories"</strong> homepage row.</p>
   </div>
 </div>
 
-<div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; align-items: start;">
+<div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 2rem; align-items: start;">
   <!-- Categories Table -->
   <div class="panel">
-    <div class="panel-header">
-      <div class="panel-title">Existing Categories</div>
+    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <div class="panel-title">Existing Categories (<%= categories.length %>)</div>
+      <small style="color: var(--admin-text-muted);">Tip: Click badges to toggle Homepage or Storefront visibility instantly</small>
     </div>
     <div class="panel-body" style="padding: 0;">
       <div class="table-responsive">
         <table class="data-table">
           <thead>
             <tr>
-              <th>Order</th>
-              <th>Category Name</th>
-              <th>Slug / URL</th>
-              <th>Visibility</th>
-              <th style="text-align: right;">Actions</th>
+              <th style="width: 50px;">Order</th>
+              <th>Category Details</th>
+              <th>Status</th>
+              <th>Homepage Spotlight</th>
+              <th style="text-align: right; width: 140px;">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -30,16 +31,33 @@
               <tr>
                 <td><strong>#<%= cat.display_order %></strong></td>
                 <td>
-                  <div style="font-weight: 700;"><%= cat.name %></div>
-                  <small style="color: #64748B;"><%= cat.description %></small>
+                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <% if (cat.image_url) { %>
+                      <img src="<%= cat.image_url %>" alt="<%= cat.name %>" style="width: 40px; height: 40px; object-fit: cover; border-radius: 6px; border: 1px solid var(--admin-border); background: #FAF8F5;">
+                    <% } %>
+                    <div>
+                      <div style="font-weight: 700; color: var(--admin-text-main); font-size: 0.95rem;"><%= cat.name %></div>
+                      <small style="color: var(--admin-text-muted); display: block; max-width: 280px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><%= cat.description || 'No description provided' %></small>
+                      <code style="font-size: 0.75rem; color: #8F7B6B; background: #F1ECE4; padding: 1px 6px; border-radius: 4px;">/shop?category=<%= cat.slug %></code>
+                    </div>
+                  </div>
                 </td>
-                <td><code>/shop?category=<%= cat.slug %></code></td>
                 <td>
-                  <span class="admin-badge <%= cat.is_active ? 'badge-active' : 'badge-inactive' %>">
-                    <%= cat.is_active ? 'Visible' : 'Hidden' %>
-                  </span>
+                  <form action="/admin/categories/<%= cat.id %>/toggle-active" method="POST" style="margin: 0;">
+                    <button type="submit" class="admin-badge <%= cat.is_active ? 'badge-active' : 'badge-inactive' %>" style="border: none; cursor: pointer; text-decoration: none;" title="Click to toggle store visibility">
+                      <%= cat.is_active ? '● Active' : '○ Disabled' %>
+                    </button>
+                  </form>
+                </td>
+                <td>
+                  <form action="/admin/categories/<%= cat.id %>/toggle-homepage" method="POST" style="margin: 0;">
+                    <button type="submit" class="admin-badge <%= cat.show_on_homepage ? 'badge-active' : 'badge-inactive' %>" style="border: none; cursor: pointer; text-decoration: none; font-weight: 600;" title="Click to toggle homepage row spotlight">
+                      <%= cat.show_on_homepage ? '★ On Homepage' : '☆ Hidden' %>
+                    </button>
+                  </form>
                 </td>
                 <td style="text-align: right;">
+                  <button type="button" class="admin-btn admin-btn-sm admin-btn-secondary" onclick='openEditModal(<%= JSON.stringify(cat) %>)' style="margin-right: 4px;">Edit</button>
                   <form action="/admin/categories/delete/<%= cat.id %>" method="POST" onsubmit="return confirm('Delete category <%= cat.name %>?');" style="display:inline;">
                     <button type="submit" class="admin-btn admin-btn-sm admin-btn-danger">Delete</button>
                   </form>
@@ -70,14 +88,23 @@
         </div>
 
         <div class="admin-form-group">
-          <label class="admin-label" for="cat_order">Display Priority Order</label>
-          <input type="number" id="cat_order" name="display_order" class="admin-input" value="3" min="0">
+          <label class="admin-label" for="cat_img">Image URL (Optional)</label>
+          <input type="text" id="cat_img" name="image_url" class="admin-input" placeholder="/uploads/products/sample.svg or image link">
         </div>
 
         <div class="admin-form-group">
-          <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; cursor: pointer;">
+          <label class="admin-label" for="cat_order">Display Priority Order</label>
+          <input type="number" id="cat_order" name="display_order" class="admin-input" value="<%= categories.length + 1 %>" min="0">
+        </div>
+
+        <div class="admin-form-group" style="background: #FAF8F5; padding: 0.85rem 1rem; border-radius: 6px; border: 1px solid var(--admin-border);">
+          <label style="display: flex; align-items: center; gap: 0.6rem; font-weight: 600; cursor: pointer; color: var(--admin-text-main); margin-bottom: 0.5rem; font-size: 0.88rem;">
+            <input type="checkbox" name="show_on_homepage" value="1" checked>
+            <span>★ Feature on Homepage ("Explore Our Core Categories")</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 0.6rem; font-weight: 600; cursor: pointer; color: var(--admin-text-main); font-size: 0.88rem;">
             <input type="checkbox" name="is_active" value="1" checked>
-            Active (Visible on Customer Navigation)
+            <span>● Active in Store Navigation</span>
           </label>
         </div>
 
@@ -88,5 +115,83 @@
     </div>
   </div>
 </div>
+
+<!-- Category Edit Modal -->
+<div id="categoryEditModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(2px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
+  <div style="background: #FFFFFF; border: 1px solid var(--admin-border); border-radius: 12px; width: 100%; max-width: 520px; box-shadow: 0 25px 60px rgba(0,0,0,0.25); overflow: hidden;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--admin-border); background: #FAF8F5;">
+      <h3 style="margin: 0; font-size: 1.15rem; font-weight: 700; color: var(--admin-text-main);">Edit Category</h3>
+      <button type="button" onclick="closeEditModal()" style="background: transparent; border: none; font-size: 1.5rem; line-height: 1; color: var(--admin-text-muted); cursor: pointer;" title="Close modal">&times;</button>
+    </div>
+
+    <form id="editCategoryForm" method="POST" style="padding: 1.5rem;">
+      <div class="admin-form-group">
+        <label class="admin-label" for="edit_name">Category Name *</label>
+        <input type="text" id="edit_name" name="name" class="admin-input" required>
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-label" for="edit_slug">URL Slug</label>
+        <input type="text" id="edit_slug" name="slug" class="admin-input" required>
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-label" for="edit_desc">Description</label>
+        <textarea id="edit_desc" name="description" rows="3" class="admin-textarea"></textarea>
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-label" for="edit_img">Image URL</label>
+        <input type="text" id="edit_img" name="image_url" class="admin-input">
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-label" for="edit_order">Display Priority Order</label>
+        <input type="number" id="edit_order" name="display_order" class="admin-input" min="0">
+      </div>
+
+      <div class="admin-form-group" style="background: #FAF8F5; padding: 0.85rem 1rem; border-radius: 6px; border: 1px solid var(--admin-border); margin-bottom: 1.5rem;">
+        <label style="display: flex; align-items: center; gap: 0.6rem; font-weight: 600; cursor: pointer; color: var(--admin-text-main); margin-bottom: 0.5rem; font-size: 0.88rem;">
+          <input type="checkbox" id="edit_homepage" name="show_on_homepage" value="1">
+          <span>★ Feature on Homepage Spotlight ("Explore Our Core Categories")</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 0.6rem; font-weight: 600; cursor: pointer; color: var(--admin-text-main); font-size: 0.88rem;">
+          <input type="checkbox" id="edit_active" name="is_active" value="1">
+          <span>● Active in Store Navigation</span>
+        </label>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+        <button type="button" onclick="closeEditModal()" class="admin-btn admin-btn-secondary">Cancel</button>
+        <button type="submit" class="admin-btn admin-btn-primary">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openEditModal(cat) {
+    document.getElementById('editCategoryForm').action = '/admin/categories/edit/' + cat.id;
+    document.getElementById('edit_name').value = cat.name || '';
+    document.getElementById('edit_slug').value = cat.slug || '';
+    document.getElementById('edit_desc').value = cat.description || '';
+    document.getElementById('edit_img').value = cat.image_url || '';
+    document.getElementById('edit_order').value = cat.display_order !== undefined ? cat.display_order : 0;
+    document.getElementById('edit_homepage').checked = cat.show_on_homepage == 1;
+    document.getElementById('edit_active').checked = cat.is_active == 1;
+    document.getElementById('categoryEditModal').style.display = 'flex';
+  }
+
+  function closeEditModal() {
+    document.getElementById('categoryEditModal').style.display = 'none';
+  }
+
+  // Close modal when clicking on backdrop
+  document.getElementById('categoryEditModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeEditModal();
+    }
+  });
+</script>
 
 <%- include('../../layouts/admin-footer') %>

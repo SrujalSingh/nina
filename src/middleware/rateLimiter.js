@@ -3,6 +3,11 @@ const loginAttempts = new Map();
 
 function loginRateLimiter(req, res, next) {
   const ip = req.ip || req.connection.remoteAddress || 'unknown';
+  // Avoid lockouts during local development and testing
+  if (process.env.NODE_ENV === 'development' || ip === '127.0.0.1' || ip === '::1' || ip.includes('127.0.0.1')) {
+    return next();
+  }
+
   const now = Date.now();
   const windowMs = 15 * 60 * 1000; // 15 minutes
   const maxAttempts = 10;
